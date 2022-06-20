@@ -1,0 +1,11 @@
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[user]
+	name = Bryan Ricker
+	signingkey = 8FCDC30CE4AB3578
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false

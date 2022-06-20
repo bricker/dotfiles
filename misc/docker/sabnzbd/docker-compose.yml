@@ -1,0 +1,28 @@
+version: "2.1"
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - /home/bryan/.sabnzbd/datadir:/config
+      - /media/bryan/Karma/BryanRicker/Media:/downloads
+      - /media/bryan/Karma/BryanRicker/Downloads/sab/incomplete:/incomplete-downloads
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+  # plex:
+  #   container_name: plex
+  #   image: plexinc/pms-docker
+  #   restart: unless-stopped
+  #   environment:
+  #     - TZ=<timezone>
+  #     - PLEX_CLAIM=<claimToken>
+  #   network_mode: host
+  #   volumes:
+  #     - <path/to/plex/database>:/config
+  #     - <path/to/transcode/temp>:/transcode
+  #     - <path/to/media>:/data

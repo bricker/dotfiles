@@ -1,0 +1,20 @@
+export DOTFILES_HOME="$HOME/dotfiles"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export HISTFILE="$XDG_DATA_HOME/zsh/zhistory"
+export HIST_STAMPS="yyyy-mm-dd"
+export HISTSIZE=1000
+export HISTFILESIZE=200000
+export EDITOR=vim
+export PAGER=less
+
+setopt globdots
+
+bindkey "\e[1;5D" backward-word
+bindkey "\e[1;5C" forward-word
+bindkey "\e[1;3D" backward-word
+bindkey "\e[1;3C" forward-word
+bindkey "^H" backward-kill-word
+
+echo "Hello from zsh, $(whoami)"

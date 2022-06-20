@@ -1,0 +1,13 @@
+#!/usr/bin/env -S bash -e
+
+main() {
+    if [ -z "$TMUX" ]; then
+        vim "$1"
+        exit $?
+    fi
+
+    local channel="$(uuidgen)"
+    tmux split-window -h "vim '$1'; tmux wait -S '$channel'"
+    tmux wait $channel
+}
+main "$1"

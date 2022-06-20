@@ -1,0 +1,6 @@
+.bcr/
+*.rdb
+xcuserdata
+*.swp
+.DS_Store
+.build/

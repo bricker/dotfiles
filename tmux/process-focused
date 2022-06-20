@@ -1,0 +1,6 @@
+#!/usr/bin/env -S bash -euo pipefail
+
+PANE_TTY=$1
+PATTERN=$2
+
+ps -o stat= -o comm= -t "$PANE_TTY" #| grep -qE '^[DRSTWXZ<NLsl]+\+\s+'"$PATTERN"'$'

@@ -1,0 +1,12 @@
+## This service runs before the special "exit" target (roughly, when the user session exits). Its purpose is to cleanly shut down google-chrome before a reboot so it can save its state for the next bootup. There is a bug in google-chrome for Linux that causes it effectively "crash" when the system reboots, and its state isn't automatically restored.
+
+[Unit]
+Description=Clean Chrome Shutdown
+Before=exit.target
+
+[Service]
+Type=oneshot
+ExecStart=pkill --oldest chrome
+
+[Install]
+WantedBy=exit.target

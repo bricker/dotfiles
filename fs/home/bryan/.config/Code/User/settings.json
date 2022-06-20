@@ -1,0 +1,135 @@
+{
+    "explorer.openEditors.visible": 0,
+    "editor.fontSize": 12,
+    "editor.renderWhitespace": "all",
+    "editor.cursorStyle": "block",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.dragAndDrop": false,
+    "editor.emptySelectionClipboard": false,
+    "editor.rulers": [
+        120,
+        160
+    ],
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.editor.enablePreview": true,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "workbench.editor.labelFormat": "short",
+    "files.associations": {
+        "Fastfile": "ruby",
+        "Matchfile": "ruby",
+        "Pluginfile": "ruby",
+        "Appfile": "ruby",
+        "*.schema": "json",
+        "*.swiftinterface": "swift"
+    },
+
+    "[javascript]": {
+        "editor.tabSize": 2,
+    },
+    "[ruby]": {
+        "editor.tabSize": 2,
+    },
+    "[json]": {
+        "editor.tabSize": 2,
+    },
+    "editor.autoClosingBrackets": "never",
+    "editor.minimap.renderCharacters": false,
+    "extensions.ignoreRecommendations": false,
+    "editor.tabSize": 2,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "editor.parameterHints.enabled": false,
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "editor.suggestSelection": "first",
+    "go.formatTool": "goimports",
+    "ruby.format": "rubocop",
+    "ruby.useLanguageServer": true,
+    "ruby.lint": {
+        "rubocop": true
+    },
+    "eslint.alwaysShowStatus": true,
+    "eslint.run": "onSave",
+    "eslint.validate": [
+        "javascript",
+        "graphql",
+    ],
+    "[yaml]": {
+        "editor.tabSize": 2
+    },
+    "editor.renderControlCharacters": true,
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-action": ["action.yml"],
+        "https://json.schemastore.org/github-workflow": ".github/workflows/*.yml",
+    },
+    "[shellscript]": {
+        "editor.tabSize": 4,
+        "files.eol": "\n"
+    },
+    "files.insertFinalNewline": true,
+    "window.menuBarVisibility": "compact",
+    "window.titleBarStyle": "custom",
+    "screencastMode.fontSize": 24,
+    "screencastMode.onlyKeyboardShortcuts": true,
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "editor.accessibilitySupport": "off",
+    "redhat.telemetry.enabled": false,
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": false
+    },
+    "eslint.probe": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "vue",
+        "markdown",
+        "graphql"
+    ],
+    "window.zoomLevel": -1,
+    "git.confirmSync": false,
+    "files.autoSave": "onFocusChange",
+    "lldb.library": "/opt/apple/current/usr/lib/liblldb.so",
+    "settingsSync.ignoredExtensions": [
+        "ms-vscode.cpptools-extension-pack"
+    ],
+    "debug.onTaskErrors": "abort",
+    "swift.path": "/opt/apple/current/usr/bin/",
+    "settingsSync.keybindingsPerPlatform": false,
+    "workbench.panel.defaultLocation": "left",
+    "editor.minimap.enabled": false,
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.limit.excludeDirty": true,
+    "workbench.editor.limit.perEditorGroup": true,
+    "workbench.editor.limit.value": 5,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.editor.wrapTabs": true,
+    "workbench.editor.tabSizing": "shrink",
+    "editor.wordBasedSuggestions": false,
+    "window.newWindowDimensions": "inherit",
+    "keyboard.dispatch": "keyCode",
+    "terminal.integrated.defaultProfile.linux": "fish",
+    "workbench.sideBar.location": "right",
+    "workbench.panel.opensMaximized": "never",
+    "window.enableMenuBarMnemonics": false,
+    "window.dialogStyle": "custom",
+    "zenMode.restore": false,
+    "markdownlint.focusMode": true,
+    "editor.autoClosingQuotes": "never"
+}

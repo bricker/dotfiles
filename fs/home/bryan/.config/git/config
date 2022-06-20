@@ -1,0 +1,3 @@
+[include]
+    path = ~/dotfiles/git/config-global
+    path = ~/dotfiles/git/config-github
