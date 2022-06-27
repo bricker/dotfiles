@@ -6,3 +6,4 @@ set -gx XDG_DATA_HOME $HOME/.local/share
 set -gx DOTFILES_HOME $HOME/dotfiles
 set -gx EDITOR $DOTFILES_HOME/tmux/tmux-vim-pane-editor
 set -gx PAGER less
+set -gx VIRTUAL_ENV_DISABLE_PROMPT 1
