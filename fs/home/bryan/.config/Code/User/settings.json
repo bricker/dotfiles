@@ -48,7 +48,6 @@
     "editor.suggestSelection": "first",
     "go.formatTool": "goimports",
     "ruby.format": "rubocop",
-    "ruby.useLanguageServer": true,
     "ruby.lint": {
         "rubocop": true
     },
@@ -70,13 +69,12 @@
         "editor.tabSize": 4,
         "files.eol": "\n"
     },
-    "files.insertFinalNewline": true,
     "window.menuBarVisibility": "compact",
     "window.titleBarStyle": "custom",
     "screencastMode.fontSize": 24,
     "screencastMode.onlyKeyboardShortcuts": true,
     "workbench.editorAssociations": {
-        "*.ipynb": "jupyter.notebook.ipynb"
+        "*.ipynb": "default"
     },
     "editor.accessibilitySupport": "off",
     "redhat.telemetry.enabled": false,
@@ -102,7 +100,6 @@
         "markdown",
         "graphql"
     ],
-    "window.zoomLevel": -1,
     "git.confirmSync": false,
     "files.autoSave": "onFocusChange",
     "lldb.library": "/opt/apple/current/usr/lib/liblldb.so",
@@ -132,16 +129,16 @@
     "zenMode.restore": false,
     "markdownlint.focusMode": true,
     "editor.autoClosingQuotes": "never",
-    "ruby.codeCompletion": "rcodetools",
-    "ruby.intellisense": "rubyLocate",
-    "ruby.languageServer": {
-    
-    },
     "ruby.locate": {
-        "exclude": "{**/@(test|spec|tmp|.*),**/@(test|spec|tmp|.*)/**,**/*_spec.rb}",
+
+        "exclude": "{**/@(test|spec|tmp|.*),**/@(test|spec|tmp|.*)/**}",
         "include": "**/*.rb"
     },
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.variableTypes": true,
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "vscode-run-rspec-file.custom-command": "bundle exec rspec --color",
+    "window.zoomLevel": -1,
+    "files.trimFinalNewlines": true,
+    "files.insertFinalNewline": true
 }

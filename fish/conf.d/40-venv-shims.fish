@@ -22,3 +22,13 @@ function pip --wraps pip --description 'venv wrapper around pip'
   venv_python activate --quiet
   command pip $argv;
 end
+
+function npm --wraps npm --description 'venv wrapper around npm'
+    venv_node activate --quiet
+    command npm $argv;
+end
+
+function node --wraps node --description 'venv wrapper around node'
+    venv_node activate --quiet
+    command node $argv;
+end

@@ -1,3 +1,3 @@
 function be --wraps 'bundle exec'
-    command bundle exec $argv
+    bundle exec $argv
 end

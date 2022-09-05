@@ -1,0 +1,13 @@
+#"^google-chrome$"
+#    None, Up, Button4, 3
+#    None, Down, Button5, 3
+
+#".*"
+#    None, Thumb1, Alt_L|Left
+#    None, Thumb2, Alt_L|Right
+#    Shift_L, Down, Right
+#    Shift_L, Up, Left
+
+".*"
+    Shift_L, Up, Button6
+    Shift_L, Down, Button7

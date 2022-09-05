@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+tmux new-session -s workspace -d
+tmux source-file $DOTFILES_HOME/tmux/tmux-setup
+tmux attach
