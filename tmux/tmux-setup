@@ -1,4 +1,2 @@
-new-window -b -t 0 -n joplin -c $HOME/code/github.com/laurent22/joplin/packages/app-cli "NODE_OPTIONS=\"--title=joplin\" yarn run start-prod"
-
-new-window -a -t joplin -n fish -c $HOME
+new-window -a -t 0 -n fish -c $HOME
 split-window -h -t fish -c $HOME

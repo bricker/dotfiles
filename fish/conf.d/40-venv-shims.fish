@@ -1,15 +1,15 @@
 function ruby --wraps ruby --description 'venv wrapper around ruby'
-  venv_ruby activate --quiet; or chruby default
+  venv_ruby activate --quiet --allow_missing
   command ruby $argv;
 end
 
 function bundle --wraps bundle --description 'venv wrapper around bundler'
-  venv_ruby activate --quiet; or chruby default
+  venv_ruby activate --quiet --allow_missing
   command bundle $argv;
 end
 
 function gem --wraps gem --description 'venv wrapper around gem'
-  venv_ruby activate --quiet; or chruby default
+  venv_ruby activate --quiet --allow_missing
   command gem $argv;
 end
 
