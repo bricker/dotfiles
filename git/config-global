@@ -4,7 +4,7 @@
 	gpgsign = true
 [user]
 	name = Bryan Ricker
-	signingkey = 8FCDC30CE4AB3578
+	signingkey = 92A4461BD2AF1E93
 [init]
 	defaultBranch = main
 [pull]
