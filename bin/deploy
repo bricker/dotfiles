@@ -1,37 +1,40 @@
 #!/usr/bin/env -S bash -eo pipefail
 
 deploy-home() {
-	cp -alviu fs/home/bryan/. "$HOME"
+    cp -alviu fs/home/bryan/. "$HOME"
 }
 
 deploy() {
-	local dir="$1"
-	sudo cp -alviu "fs/$dir/." "/$dir"	
+    local dir="$1"
+    sudo cp -alviu "fs/$dir/." "/$dir"
 }
 
 main() {
-	local platform="$1"
-	set -u
+    local platform="$1"
+    set -u
 
-	case $platform in
-		"" | "linux")
-			deploy usr
-			deploy etc
-			deploy-home
-			;;
-		*)
-			echo "Usage: deploy [PLATFORM]"
-			echo "  Supported platforms: linux"
-			exit 0
-			;;
+    case $platform in
+        "" | "linux")
+            deploy usr
+            deploy etc
+            deploy-home
+            ;;
+        "macos")
+            deploy-home
+            ;;
+        *)
+            echo "Usage: deploy [PLATFORM]"
+            echo "  Supported platforms: linux, macos"
+            exit 0
+            ;;
 
-	esac
+    esac
 
 }
 
 if [ "$(whoami)" == "root" ]; then
-	echo "this program should not be run as root."
-	exit 1
+    echo "this program should not be run as root."
+    exit 1
 fi
 
 main "$1"
