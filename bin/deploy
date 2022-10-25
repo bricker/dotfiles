@@ -14,22 +14,24 @@ main() {
     set -u
 
     case $platform in
-        "" | "linux")
+        "ubuntu")
             deploy usr
             deploy etc
             deploy-home
             ;;
-        "macos")
+        "pi")
+            deploy-home
+            ;;
+        "darwin")
             deploy-home
             ;;
         *)
             echo "Usage: deploy [PLATFORM]"
-            echo "  Supported platforms: linux, macos"
+            echo "  Supported platforms: ubuntu, pi, darwin"
             exit 0
             ;;
 
     esac
-
 }
 
 if [ "$(whoami)" == "root" ]; then
