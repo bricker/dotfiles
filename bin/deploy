@@ -10,27 +10,37 @@ deploy() {
 }
 
 main() {
-    local platform="$1"
+    local kernel=$(uname -s)
+    echo "Kernel: ${kernel}"
     set -u
 
-    case $platform in
-        "ubuntu")
-            deploy usr
-            deploy etc
-            deploy-home
-            ;;
-        "pi")
-            deploy-home
-            ;;
-        "darwin")
-            deploy-home
-            ;;
-        *)
-            echo "Usage: deploy [PLATFORM]"
-            echo "  Supported platforms: ubuntu, pi, darwin"
-            exit 0
+    case "$kernel" in
+        "Linux")
+            local dist=$(lsb_release -is)
+            echo "Distribution: ${dist}"
+            case "$dist" in
+                "Ubuntu")
+                    deploy usr
+                    deploy etc
+                    deploy-home
+                    ;;
+                "Raspbian")
+                    deploy-home
+                    ;;
+                *)
+                    echo "Operating system not supported: ${dist}"
+                    exit 1
+                    ;;
+            esac
             ;;
 
+        "Darwin")
+            deploy-home
+            ;;
+
+        *)
+            echo "Kernel not supported: ${kernel}"
+            exit 1
     esac
 }
 
