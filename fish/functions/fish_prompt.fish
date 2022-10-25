@@ -44,6 +44,10 @@ function fish_prompt --description 'Write out the prompt'
         set suffix '>'
     end
 
+    set_color 999999
+    echo -n "$(whoami)@$(hostname) "
+    set_color normal
+
     # PWD
     set_color $color_cwd
     echo -n (prompt_pwd)

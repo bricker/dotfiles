@@ -43,6 +43,4 @@ function update_plugin -d "updates a plugin in the plugins folder" -a plugin_nam
     _try_cp_files $plugin_path/vendor_completions.d $dest_path/vendor_completions.d
     _try_cp_files $plugin_path/vendor_functions.d   $dest_path/vendor_functions.d
     _try_cp_files $plugin_path/vendor_conf.d        $dest_path/vendor_conf.d
-
-    emit nvm_install
 end

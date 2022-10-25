@@ -1,0 +1,100 @@
+#!/usr/bin/bash
+
+if test "$(whoami)" = "root"
+then
+    echo "This program should not be run as root."
+    exit 1
+fi
+
+function ask() {
+    echo ""
+    echo -n "$1 [Y/n] "
+    read input
+    test "$input" = "Y"
+}
+
+
+
+function installgit() {
+    sudo apt install -y git
+}
+
+function installvim() {
+    sudo apt install -y vim
+}
+
+function installvimrc() {
+    rm -rf ~/.vim_runtime
+    git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+    ~/.vim_runtime/install_awesome_vimrc.sh
+}
+
+function installtmux() {
+    sudo apt install -y tmux
+}
+
+function installfish() {
+    echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_11/ /' | sudo tee /etc/apt/sources.list.d/shells:fish:release:3.list
+    curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:3/Debian_11/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
+    sudo apt update
+    sudo apt install -y fish
+    chsh --shell $(which fish)
+}
+
+function installrubyinstall() {
+    echo "ruby-install support not yet implemented"
+}
+
+function installchruby() {
+    echo "chruby support not yet implemented"
+    #    wget -O /tmp/chruby-fish-0.8.2.tar.gz https://github.com/JeanMertz/chruby-fish/archive/v0.8.2.tar.gz
+    #    tar -xzvf /tmp/chruby-fish-0.8.2.tar.gz
+    #    cd /tmp/chruby-fish-0.8.2/
+    #    make install
+    #    rm -rf /tmp/chruby-fish*
+}
+
+function installnvm() {
+    mkdir -p $XDG_CONFIG_HOME/fish/plugins
+    rm -rf $XDG_CONFIG_HOME/fish/plugins/nvm.fish
+    git -C $XDG_CONFIG_HOME/fish/plugins clone git@github.com:jorgebucaran/nvm.fish.git
+    fish -C "update_plugin nvm.fish"
+    fish -C "emit nvm_install"
+}
+
+function generatessh() {
+    ssh-keygen -t ed25519 -a 100 -C "$(whoami)@$(hostname)"
+    ssh-keygen -y -f ~/.ssh/id_ed25519
+}
+
+function installgcloud() {
+    sudo apt install -y apt-transport-https ca-certificates gnupg
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
+    sudo apt update
+    sudo apt install -y google-cloud-cli
+    gcloud init
+}
+
+#######################################################
+
+sudo apt update
+
+if test -n "$1"
+then
+    $1
+    exit $?
+fi
+
+if ask "Install git?"; then installgit; fi
+if ask "Install vim?"; then installvim; fi
+if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then installvimrc; fi
+if ask "Install tmux?"; then installtmux; fi
+if ask "Install Fish Shell?"; then installfish; fi
+if ask "Install nvm?"; then installnvm; fi
+if ask "Generate SSH Key?"; then generatessh; fi
+if ask "Install gcloud CLI?"; then installgcloud; fi
+
+# TODO:
+# - apt default-jre
+# - apt maven

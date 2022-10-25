@@ -7,3 +7,4 @@ set -gx DOTFILES_HOME $HOME/dotfiles
 set -gx EDITOR $DOTFILES_HOME/bin/tmux-vim-pane-editor
 set -gx PAGER less
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1
+set -gx GPG_TTY (tty)
