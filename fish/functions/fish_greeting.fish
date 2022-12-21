@@ -12,6 +12,15 @@ function fish_greeting
         end
     end
 
+    if set -q TERM_INTEGRATED
+        set -l line "fish is running in integrated mode"
+        if set -q fish_greeting[1]
+            set -g fish_greeting $fish_greeting\n$line
+        else
+            set -g fish_greeting $line
+        end
+    end
+
     # The greeting used to be skipped when fish_greeting was empty (not just undefined)
     # Keep it that way to not print superfluous newlines on old configuration
     test -n "$fish_greeting"

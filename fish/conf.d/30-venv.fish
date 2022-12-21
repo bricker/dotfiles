@@ -1,14 +1,14 @@
 function venv -a subcommand lang --description "manage the virtual environment(s) for the current directory"
   argparse h/help -- $argv; or return
 
-  if test -z "$lang"
-    echo --type error "missing required argument lang. try 'ruby' or 'python'."
-    return 1
-  end
-
   if set -q _flag_help; or test "$subcommand" = "help"; or test -z "$subcommand"
     echo "Usage: venv (activate|deactivate|status|help) [lang]"
     return
+  end
+
+  if test -z "$lang"
+    echo --type error "missing required argument lang. try 'ruby' or 'python'."
+    return 1
   end
 
   if type -q venv_$lang

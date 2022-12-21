@@ -529,5 +529,38 @@
   {
     "key": "ctrl+shift+right",
     "command": "cursorWordRightSelect"
+  },
+  {
+    "key": "ctrl+shift+b",
+    "command": "workbench.action.focusAuxiliaryBar"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "-editor.action.toggleTabFocusMode"
+  },
+  {
+    "key": "ctrl+k ctrl+t",
+    "command": "-workbench.action.selectTheme"
+  },
+  {
+    "key": "ctrl+shift+pageup",
+    "command": "workbench.action.terminal.focus"
+  },
+  {
+    "key": "ctrl+k ctrl+e",
+    "command": "-keybindings.editor.defineWhenExpression",
+    "when": "inKeybindings && keybindingFocus"
+  },
+  {
+    "key": "ctrl+shift+pagedown",
+    "command": "workbench.action.focusActiveEditorGroup"
+  },
+  {
+    "key": "ctrl+shift+pagedown",
+    "command": "-workbench.action.moveEditorRightInGroup"
+  },
+  {
+    "key": "ctrl+shift+pageup",
+    "command": "-workbench.action.moveEditorLeftInGroup"
   }
 ]
