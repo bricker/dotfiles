@@ -44,16 +44,24 @@ function fish_prompt --description 'Write out the prompt'
         set suffix '>'
     end
 
-    set_color 999999
-    echo -n "$(whoami)@$(hostname) "
-    set_color normal
+    if not set -q TERM_INTEGRATED
+        set_color 999999
+        printf "%s@%s " (whoami) (hostname)
+        set_color normal
+    end
 
     # PWD
     set_color $color_cwd
-    echo -n (prompt_pwd)
+    if not set -q TERM_INTEGRATED
+        echo -n (prompt_pwd)
+    else
+        echo -n (string split -r -m1 -f2 / $PWD)
+    end
     set_color normal
 
-    printf '%s ' (fish_vcs_prompt)
+    if not set -q TERM_INTEGRATED
+        printf '%s ' (fish_vcs_prompt)
+    end
 
     set -l status_color (set_color $fish_color_status)
     set -l statusb_color (set_color --bold $fish_color_status)
