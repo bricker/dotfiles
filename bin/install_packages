@@ -13,8 +13,6 @@ function ask() {
     test "$input" = "Y"
 }
 
-
-
 function installgit() {
     sudo apt install -y git
 }
@@ -41,17 +39,20 @@ function installfish() {
     chsh --shell $(which fish)
 }
 
+function installhomebrew() {
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
+
+function installpython() {
+    brew install python
+}
+
 function installrubyinstall() {
-    echo "ruby-install support not yet implemented"
+    brew install ruby-install
 }
 
 function installchruby() {
-    echo "chruby support not yet implemented"
-    #    wget -O /tmp/chruby-fish-0.8.2.tar.gz https://github.com/JeanMertz/chruby-fish/archive/v0.8.2.tar.gz
-    #    tar -xzvf /tmp/chruby-fish-0.8.2.tar.gz
-    #    cd /tmp/chruby-fish-0.8.2/
-    #    make install
-    #    rm -rf /tmp/chruby-fish*
+    brew install chruby-fish
 }
 
 function installnvm() {
@@ -59,7 +60,7 @@ function installnvm() {
     rm -rf $XDG_CONFIG_HOME/fish/plugins/nvm.fish
     git -C $XDG_CONFIG_HOME/fish/plugins clone git@github.com:jorgebucaran/nvm.fish.git
     fish -C "update_plugin nvm.fish"
-    fish -C "emit nvm_install"
+    fish -C "emit nvm_install" # FIXME: This is supposed to install $nvm_data but doesn't
 }
 
 function generatessh() {
@@ -76,6 +77,22 @@ function installgcloud() {
     gcloud init
 }
 
+function installpostgresql() {
+    sudo apt update
+    sudo apt install -y postgresql postgresql-contrib libpq-dev
+}
+
+function installgh() {
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+}
+
+function installxclip() {
+    sudo apt install xclip
+}
 #######################################################
 
 sudo apt update
@@ -91,10 +108,21 @@ if ask "Install vim?"; then installvim; fi
 if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then installvimrc; fi
 if ask "Install tmux?"; then installtmux; fi
 if ask "Install Fish Shell?"; then installfish; fi
+if ask "Install Homebrew?"; then installhomebrew; fi
+if ask "Install Python?"; then installpython; fi
+if ask "Install ruby-install?"; then installrubyinstall; fi
+if ask "Install chruby?"; then installchruby; fi
 if ask "Install nvm?"; then installnvm; fi
 if ask "Generate SSH Key?"; then generatessh; fi
 if ask "Install gcloud CLI?"; then installgcloud; fi
+if ask "Install postgresql?"; then installposgresql; fi
+if ask "Install github CLI?"; then installgh; fi
+if ask "Install xclip?"; then installxclip; fi
 
 # TODO:
 # - apt default-jre
 # - apt maven
+# - swift
+# - imwheel
+# - xbindkeys?
+# - bluez?
