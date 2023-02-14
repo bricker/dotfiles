@@ -20,11 +20,12 @@
         "Pluginfile": "ruby",
         "Appfile": "ruby",
         "*.schema": "json",
-        "*.swiftinterface": "swift"
+        "*.swiftinterface": "swift",
+        "*.html.jinja": "jinja-html"
     },
 
     "[javascript]": {
-    
+
         "editor.tabSize": 2,
     },
     "[ruby]": {
@@ -44,16 +45,17 @@
     "editor.parameterHints.enabled": false,
     "editor.acceptSuggestionOnCommitCharacter": false,
     "files.exclude": {
+        "**/__pycache__": true,
         "**/.classpath": true,
+        "**/.factorypath": true,
         "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
+        "**/.settings": true
     },
-    "editor.suggestSelection": "first",
+    "editor.suggestSelection": "recentlyUsed",
     "go.formatTool": "goimports",
-    "ruby.format": "rubocop",
+    "ruby.format": false,
     "ruby.lint": {
-        "rubocop": true
+        "rubocop": false
     },
     "eslint.alwaysShowStatus": true,
     "eslint.run": "onSave",
@@ -105,7 +107,6 @@
         "graphql"
     ],
     "git.confirmSync": false,
-    "files.autoSave": "onFocusChange",
     "lldb.library": "/opt/apple/current/usr/lib/liblldb.so",
     "settingsSync.ignoredExtensions": [
         "ms-vscode.cpptools-extension-pack"
@@ -164,7 +165,7 @@
         "semanticHighlighting": true
     },
     "editor.codeActionsOnSave": {
-    
+
     },
     "sorbet.lspConfigs": [
 
@@ -212,10 +213,64 @@
         }
     ],
     "editor.language.brackets": [
-    
+
     ],
     "terminal.integrated.env.linux": {
         "TERM_INTEGRATED": "1"
     },
-    "go.toolsManagement.autoUpdate": true
+    "go.toolsManagement.autoUpdate": true,
+    "[python]": {
+        "editor.tabSize": 4
+    },
+    "editor.indentSize": "tabSize",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.autoImportUserSymbols": true,
+    "python.autoComplete.extraPaths": [
+
+    ],
+    "python.analysis.extraPaths": [],
+    "workbench.iconTheme": "material-icon-theme",
+    "material-icon-theme.hidesExplorerArrows": false,
+    "material-icon-theme.folders.theme": "classic",
+    "material-icon-theme.folders.color": "#ef5350",
+    "files.trimTrailingWhitespace": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.formatting.provider": "black",
+    "python.testing.unittestEnabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.diagnostics.sourceMapsEnabled": true,
+    "todo-tree.filtering.excludeGlobs": [
+        "**/node_modules/*/**",
+        "**/.venv/*/**"
+    ],
+    "todo-tree.tree.tagsOnly": true,
+    "editor.suggest.matchOnWordStartOnly": false,
+    "editor.suggest.preview": true,
+    "editor.suggest.showStatusBar": true,
+    "editor.quickSuggestions": {
+        "other": "inline"
+    },
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope":[
+                    "string.quoted.docstring.multi.python",
+                    "string.quoted.docstring.multi.python punctuation.definition.string.begin.python",
+                    "string.quoted.docstring.multi.python punctuation.definition.string.end.python",
+                    "string.quoted.docstring.multi.python constant.character.escape.python"
+                ],
+                "settings": {
+                    "foreground": "#01c459",
+                    "fontStyle": "italic"
+                }
+            }
+        ]
+    },
+    "editor.suggestOnTriggerCharacters": false,
+    "editor.stickyScroll.enabled": true,
+    "git.openRepositoryInParentFolders": "never",
+    "python.linting.mypyArgs": []
 }

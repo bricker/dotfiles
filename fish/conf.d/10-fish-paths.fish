@@ -18,3 +18,8 @@ set -l goroot "/usr/local/go/bin"
 if test -d "$goroot"
     fish_add_path -g "$goroot"
 end
+
+set -l googlecloudsdk "/usr/lib/google-cloud-sdk/bin"
+if test -d "$googlecloudsdk"
+    fish_add_path -g "$googlecloudsdk"
+end

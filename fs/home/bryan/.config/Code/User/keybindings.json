@@ -531,7 +531,7 @@
     "command": "cursorWordRightSelect"
   },
   {
-    "key": "ctrl+shift+b",
+    "key": "ctrl+k ctrl+shift+b",
     "command": "workbench.action.focusAuxiliaryBar"
   },
   {
@@ -562,5 +562,17 @@
   {
     "key": "ctrl+shift+pageup",
     "command": "-workbench.action.moveEditorLeftInGroup"
+  },
+  {
+    "key": "ctrl+k ctrl+shift+o",
+    "command": "workbench.action.showAllSymbols"
+  },
+  {
+    "key": "ctrl+t",
+    "command": "-workbench.action.showAllSymbols"
+  },
+  {
+    "key": "ctrl+shift+b",
+    "command": "workbench.action.toggleAuxiliaryBar"
   }
 ]

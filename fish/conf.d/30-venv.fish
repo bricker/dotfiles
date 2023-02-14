@@ -12,7 +12,7 @@ function venv -a subcommand lang --description "manage the virtual environment(s
   end
 
   if type -q venv_$lang
-    venv_$lang $subcommand
+    venv_$lang $subcommand $argv
   else
     echo --type error "$lang is not a supported virtual environment"
     return 1
@@ -41,7 +41,7 @@ function venv_node -a subcommand --description "manage a node venv for the curre
         if test -f $file
           nvm use (cat $file)
           set -g $activated_flag
-          venv_node status
+          venv_node status $argv
           return
         end
     end
@@ -54,7 +54,7 @@ function venv_node -a subcommand --description "manage a node venv for the curre
   case d deactivate
     set --erase $activated_flag
     nvm use system
-    venv_node status
+    venv_node status $argv
     return
 
   case s status
@@ -90,7 +90,8 @@ function venv_python -a subcommand --description "manage a python venv for the c
       if test -f $file
         source $file
         set -g $activated_flag
-        venv_python status
+        echo --type success "venv loaded"
+        venv_python status $argv
         return
       end
     end
@@ -102,13 +103,13 @@ function venv_python -a subcommand --description "manage a python venv for the c
 
   case d deactivate
     set --erase $activated_flag
-  
+
     # deactivate is defined by python venv
     if type -q deactivate
       deactivate
     end
 
-    venv_python status
+    venv_python status $argv
     return
 
   case s status
@@ -144,11 +145,11 @@ function venv_ruby -a subcommand --description "manage a ruby venv for the curre
       if test -f $file
         chruby (cat $file)
         set -g $activated_flag
-        venv_ruby status
+        venv_ruby status $argv
         return
       end
     end
-  
+
     if not set -q _flag_allow_missing
       echo --type error "no $lang version detected in $root. Virtual environment not loaded."
       return 1
@@ -157,7 +158,7 @@ function venv_ruby -a subcommand --description "manage a ruby venv for the curre
   case d deactivate
     set --erase $activated_flag
     chruby system
-    venv_ruby status
+    venv_ruby status $argv
     return
 
   case s status
