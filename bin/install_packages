@@ -43,6 +43,10 @@ function installhomebrew() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
+function installpython() {
+    brew install python
+}
+
 function installrubyinstall() {
     brew install ruby-install
 }
@@ -86,6 +90,9 @@ function installgh() {
     && sudo apt install gh -y
 }
 
+function installxclip() {
+    sudo apt install xclip
+}
 #######################################################
 
 sudo apt update
@@ -102,6 +109,7 @@ if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then installvimrc; 
 if ask "Install tmux?"; then installtmux; fi
 if ask "Install Fish Shell?"; then installfish; fi
 if ask "Install Homebrew?"; then installhomebrew; fi
+if ask "Install Python?"; then installpython; fi
 if ask "Install ruby-install?"; then installrubyinstall; fi
 if ask "Install chruby?"; then installchruby; fi
 if ask "Install nvm?"; then installnvm; fi
@@ -109,6 +117,7 @@ if ask "Generate SSH Key?"; then generatessh; fi
 if ask "Install gcloud CLI?"; then installgcloud; fi
 if ask "Install postgresql?"; then installposgresql; fi
 if ask "Install github CLI?"; then installgh; fi
+if ask "Install xclip?"; then installxclip; fi
 
 # TODO:
 # - apt default-jre
