@@ -8,4 +8,4 @@ set -gx EDITOR $DOTFILES_HOME/bin/tmux-vim-pane-editor
 set -gx PAGER less
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1
 set -gx GPG_TTY (tty)
-set -gx EAVE_HOME $HOME/code/eave
+set -gx EAVE_HOME $HOME/code/eave/eave-monorepo

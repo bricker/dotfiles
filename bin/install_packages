@@ -73,7 +73,14 @@ function installgcloud() {
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
     sudo apt update
-    sudo apt install -y google-cloud-cli
+    sudo apt install -y \
+        google-cloud-cli \
+        google-cloud-sdk \
+        google-cloud-sdk-pubsub-emulator \
+        google-cloud-sdk-cloud-run-proxy \
+        google-cloud-sdk-app-engine-python \
+        google-cloud-sdk-app-engine-python-extras
+
     gcloud init
 }
 
@@ -93,6 +100,24 @@ function installgh() {
 function installxclip() {
     sudo apt install xclip
 }
+
+function installngrok() {
+    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
+        sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && \
+        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | \
+        sudo tee /etc/apt/sources.list.d/ngrok.list && \
+        sudo apt update && \
+        sudo apt install ngrok
+
+    read -sp "Enter your ngrok auth token: " authtoken
+    ngrok config add-authtoken $authtoken
+}
+
+function installinsomnia() {
+    curl -L -o /tmp/Insomnia-latest.deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
+    sudo dpkg -i /tmp/Insomnia-latest.deb
+}
+
 #######################################################
 
 sudo apt update
@@ -118,6 +143,9 @@ if ask "Install gcloud CLI?"; then installgcloud; fi
 if ask "Install postgresql?"; then installposgresql; fi
 if ask "Install github CLI?"; then installgh; fi
 if ask "Install xclip?"; then installxclip; fi
+if ask "Install ngrok?"; then installngrok; fi
+if ask "Install Insomnia?"; then installinsomnia; fi
+
 
 # TODO:
 # - apt default-jre
