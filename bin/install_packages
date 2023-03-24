@@ -43,8 +43,11 @@ function installhomebrew() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
-function installpython() {
-    brew install python
+function installsystempython() {
+    sudo add-apt-repository ppa:deadsnakes/ppa
+    sudo apt update
+    sudo apt install python3.11 python3.11-venv python3-pip python-tk python3-tk tk-dev
+    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 2
 }
 
 function installrubyinstall() {
@@ -53,6 +56,12 @@ function installrubyinstall() {
 
 function installchruby() {
     brew install chruby-fish
+}
+
+function installpyenv() {
+    sudo apt update
+    sudo apt install python-tk python3-tk tk-dev
+    brew install pyenv
 }
 
 function installnvm() {
@@ -109,10 +118,11 @@ if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then installvimrc; 
 if ask "Install tmux?"; then installtmux; fi
 if ask "Install Fish Shell?"; then installfish; fi
 if ask "Install Homebrew?"; then installhomebrew; fi
-if ask "Install Python?"; then installpython; fi
+# if ask "Update System Python?"; then installpython; fi
 if ask "Install ruby-install?"; then installrubyinstall; fi
 if ask "Install chruby?"; then installchruby; fi
 if ask "Install nvm?"; then installnvm; fi
+if ask "Install pyenv?"; then installpyenv; fi
 if ask "Generate SSH Key?"; then generatessh; fi
 if ask "Install gcloud CLI?"; then installgcloud; fi
 if ask "Install postgresql?"; then installposgresql; fi

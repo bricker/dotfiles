@@ -6,6 +6,8 @@ function echo --wraps echo --description "Print a message of the given type"
     return
   end
 
+  set output /dev/stdout
+
   switch "$_flag_type"
   case s success
     set color green
@@ -14,14 +16,20 @@ function echo --wraps echo --description "Print a message of the given type"
     set color cyan
     set tag info
   case d debug
+    if not set -q FISH_DEBUG
+        return
+    end
     set color grey
     set tag debug
+    set output /dev/stderr
   case e error
     set color red
     set tag error
-  case w warning
+    set output /dev/stderr
+  case w warn warning
     set color yellow
     set tag warning
+    set output /dev/stderr
   case '*'
     command echo $argv
     return
@@ -29,5 +37,5 @@ function echo --wraps echo --description "Print a message of the given type"
 
   set msg $argv[-1]
   set -e argv[-1]
-  command echo $argv "$(set_color -ro $color)"'['"$tag"']'" $msg$(set_color normal)"
+  command echo $argv "$(set_color -ro $color)"'['"$tag"']'" $msg$(set_color normal)" > $output
 end

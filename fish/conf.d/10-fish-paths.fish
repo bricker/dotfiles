@@ -2,24 +2,17 @@ set --prepend fish_function_path $DOTFILES_HOME/fish/functions
 set --prepend fish_complete_path $DOTFILES_HOME/fish/completions
 fish_add_path -g $DOTFILES_HOME/bin
 
-set -l mintdir "$HOME/.mint/bin"
-if test -d "$mintdir"
-    fish_add_path -g "$mintdir"
-end
+set -gx GCLOUD_SDK_ROOT "/usr/lib/google-cloud-sdk"
+fish_add_path -g $GCLOUD_SDK_ROOT/bin
 
-set -l brewcmd "/home/linuxbrew/.linuxbrew/bin/brew"
-if test -x "$brewcmd"
-    set -gx HOMEBREW_ROOT ($brewcmd --prefix)
-    set -gx CHRUBY_ROOT $HOMEBREW_ROOT
+set -gx GOROOT "/usr/local/go"
+fish_add_path -g $GOROOT/bin
+
+set -gx MINT_PATH "$XDG_DATA_HOME/mint"
+set -gx MINT_LINK_PATH "$MINT_PATH/bin"
+fish_add_path -g $MINT_LINK_PATH
+
+if command -v brew > /dev/null
+    set -gx HOMEBREW_ROOT (brew --prefix)
     fish_add_path -g $HOMEBREW_ROOT/bin
-end
-
-set -l goroot "/usr/local/go/bin"
-if test -d "$goroot"
-    fish_add_path -g "$goroot"
-end
-
-set -l googlecloudsdk "/usr/lib/google-cloud-sdk/bin"
-if test -d "$googlecloudsdk"
-    fish_add_path -g "$googlecloudsdk"
 end

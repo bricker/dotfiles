@@ -34,16 +34,52 @@ function venv_node -a subcommand --description "manage a node venv for the curre
 
   switch "$subcommand"
   case a activate
-    set -l files .node-version .nvmrc $root/.node-version $root/.nvmrc
+    set -l files .node-version .nvmrc
+    set -l curdir (pwd)
 
-    for file in $files
-        echo --type debug "trying $file"
-        if test -f $file
-          nvm use (cat $file)
+    while true
+      for file in $files
+        set -l abspath $curdir/$file
+        echo --type debug "trying $abspath"
+        if test -f $abspath
+          set -l nodeversion (cat "$abspath")
+          if test -n "$nodeversion"
+            echo --type debug "Found node version $nodeversion specified in $abspath"
+            nvm use $nodeversion 
+            set -g $activated_flag
+            venv_node status $argv
+            return
+          end
+        end
+      end
+
+      if test "$curdir" = "$root"
+        break
+      end
+
+      set curdir (dirname $curdir)
+    end
+    
+    set curdir (pwd)
+    while true
+      set abspath $curdir/package.json
+      echo --type debug "trying $abspath"
+      if test -f "$abspath"
+        set nodeversion (cat "$abspath" | jq -r '.engines.node // empty')
+        if test -n "$nodeversion"
+          echo --type debug "Found node version $nodeversion specified in $abspath"
+          nvm use $nodeversion
           set -g $activated_flag
           venv_node status $argv
           return
         end
+      end
+
+      if test "$curdir" = "$root"
+        break
+      end
+
+      set curdir (dirname $curdir)
     end
 
     if not set -q _flag_allow_missing
@@ -59,7 +95,7 @@ function venv_node -a subcommand --description "manage a node venv for the curre
 
   case s status
     if not set -q _flag_quiet
-      echo "$(command node --version) @ $(which node)"
+      echo --type info "$(command node --version) @ $(which node)"
     end
     return
 
@@ -90,7 +126,6 @@ function venv_python -a subcommand --description "manage a python venv for the c
       if test -f $file
         source $file
         set -g $activated_flag
-        echo --type success "venv loaded"
         venv_python status $argv
         return
       end
@@ -114,7 +149,7 @@ function venv_python -a subcommand --description "manage a python venv for the c
 
   case s status
     if not set -q _flag_quiet
-      echo "$(command python --version) @ $(which python)"
+      echo --type info "$(command python --version) @ $(which python)"
     end
     return
 
@@ -163,7 +198,7 @@ function venv_ruby -a subcommand --description "manage a ruby venv for the curre
 
   case s status
     if not set -q _flag_quiet
-      echo "$(command ruby --version) @ $(which ruby)"
+      echo --type info "$(command ruby --version) @ $(which ruby)"
     end
     return
 

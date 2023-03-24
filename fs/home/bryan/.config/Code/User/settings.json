@@ -220,7 +220,8 @@
     },
     "go.toolsManagement.autoUpdate": true,
     "[python]": {
-        "editor.tabSize": 4
+        "editor.tabSize": 4,
+        "editor.formatOnType": true
     },
     "editor.indentSize": "tabSize",
     "python.analysis.autoImportCompletions": true,
@@ -272,5 +273,11 @@
     "editor.suggestOnTriggerCharacters": false,
     "editor.stickyScroll.enabled": true,
     "git.openRepositoryInParentFolders": "never",
-    "python.linting.mypyArgs": []
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "eslint.format.enable": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "workbench.cloudChanges.autoResume": "off",
+    "workbench.cloudChanges.continueOn": "off"
 }
