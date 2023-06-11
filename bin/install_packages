@@ -46,8 +46,9 @@ function installhomebrew() {
 function installsystempython() {
     sudo add-apt-repository ppa:deadsnakes/ppa
     sudo apt update
-    sudo apt install python3.11 python3.11-venv python3-pip python-tk python3-tk tk-dev
-    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 2
+    sudo apt install python3-pip python3.10-venv
+#    sudo apt install python3.11 python3.11-venv python3-pip python-tk python3-tk tk-dev
+#    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 2
 }
 
 function installrubyinstall() {
@@ -127,6 +128,17 @@ function installinsomnia() {
     sudo dpkg -i /tmp/Insomnia-latest.deb
 }
 
+function installpgadmin() {
+    curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+    sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+    sudo apt install pgadmin4
+}
+
+function installnode() {
+    curl -sL https://deb.nodesource.com/setup_18.x | sudo bash -
+    sudo apt install -y nodejs
+}
+
 #######################################################
 
 sudo apt update
@@ -144,6 +156,7 @@ if ask "Install tmux?"; then installtmux; fi
 if ask "Install Fish Shell?"; then installfish; fi
 if ask "Install Homebrew?"; then installhomebrew; fi
 # if ask "Update System Python?"; then installpython; fi
+# if ask "Update system node?"; then installnode; fi
 if ask "Install ruby-install?"; then installrubyinstall; fi
 if ask "Install chruby?"; then installchruby; fi
 if ask "Install nvm?"; then installnvm; fi
@@ -155,6 +168,7 @@ if ask "Install github CLI?"; then installgh; fi
 if ask "Install xclip?"; then installxclip; fi
 if ask "Install ngrok?"; then installngrok; fi
 if ask "Install Insomnia?"; then installinsomnia; fi
+if ask "Install pgadmin?"; then installpgadmin; fi
 
 
 # TODO:
