@@ -213,7 +213,7 @@
     "command": "-workbench.action.previousEditor"
   },
   {
-    "key": "shift+meta+e",
+    "key": "ctrl+shift+e",
     "command": "workbench.files.action.showActiveFileInExplorer"
   },
   {
@@ -543,17 +543,9 @@
     "command": "-workbench.action.selectTheme"
   },
   {
-    "key": "ctrl+shift+pageup",
-    "command": "workbench.action.terminal.focus"
-  },
-  {
     "key": "ctrl+k ctrl+e",
     "command": "-keybindings.editor.defineWhenExpression",
     "when": "inKeybindings && keybindingFocus"
-  },
-  {
-    "key": "ctrl+shift+pagedown",
-    "command": "workbench.action.focusActiveEditorGroup"
   },
   {
     "key": "ctrl+shift+pagedown",
@@ -574,5 +566,57 @@
   {
     "key": "ctrl+shift+b",
     "command": "workbench.action.toggleAuxiliaryBar"
+  },
+  {
+    "key": "ctrl+shift+e",
+    "command": "-workbench.view.explorer",
+    "when": "viewContainer.workbench.view.explorer.enabled"
+  },
+  {
+    "key": "ctrl+shift+pagedown",
+    "command": "workbench.action.nextSideBarView"
+  },
+  {
+    "key": "ctrl+shift+pageup",
+    "command": "workbench.action.previousSideBarView"
+  },
+  {
+    "key": "ctrl+k w",
+    "command": "-workbench.action.closeEditorsInGroup"
+  },
+  {
+    "key": "ctrl+k ctrl+w",
+    "command": "-workbench.action.closeAllEditors"
+  },
+  {
+    "key": "ctrl+k ctrl+shift+w",
+    "command": "-workbench.action.closeAllGroups"
+  },
+  {
+    "key": "ctrl+q",
+    "command": "-workbench.action.quit"
+  },
+  {
+    "key": "ctrl+k ctrl+f",
+    "command": "testing.debugCurrentFile",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+; ctrl+f",
+    "command": "-testing.debugCurrentFile",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "-workbench.action.files.saveAs"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "-workbench.action.files.saveLocalFile",
+    "when": "remoteFileDialogVisible"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "workbench.action.files.saveFiles"
   }
 ]

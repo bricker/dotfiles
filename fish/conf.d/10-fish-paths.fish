@@ -12,7 +12,8 @@ set -gx MINT_PATH "$XDG_DATA_HOME/mint"
 set -gx MINT_LINK_PATH "$MINT_PATH/bin"
 fish_add_path -g $MINT_LINK_PATH
 
-if command -v brew > /dev/null
-    set -gx HOMEBREW_ROOT (brew --prefix)
+set -l brewcmd "/home/linuxbrew/.linuxbrew/bin/brew"
+if test -x "$brewcmd"
+    set -gx HOMEBREW_ROOT ($brewcmd --prefix)
     fish_add_path -g $HOMEBREW_ROOT/bin
 end

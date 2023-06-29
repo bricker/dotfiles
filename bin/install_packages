@@ -139,6 +139,20 @@ function installnode() {
     sudo apt install -y nodejs
 }
 
+function installjq() {
+    sudo apt install jq
+}
+
+function installyq() {
+    brew install yq
+}
+
+function installterraform() {
+    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+    sudo apt update && sudo apt install terraform
+)
+
 #######################################################
 
 sudo apt update
@@ -169,7 +183,9 @@ if ask "Install xclip?"; then installxclip; fi
 if ask "Install ngrok?"; then installngrok; fi
 if ask "Install Insomnia?"; then installinsomnia; fi
 if ask "Install pgadmin?"; then installpgadmin; fi
-
+if ask "Install jq?"; then installjq; fi
+if ask "Install yq?"; then installyq; fi
+if ask "Install terraform?"; then installterraform; fi
 
 # TODO:
 # - apt default-jre

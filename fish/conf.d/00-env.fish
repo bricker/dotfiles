@@ -10,3 +10,5 @@ set -gx PAGER less
 set -gx GPG_TTY (tty)
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1
 set -gx CHRUBY_AUTO_DISABLE 1
+set -gx REQUESTS_CA_BUNDLE /etc/ssl/certs/ca-certificates.crt # for python
+set -gx BROWSER google-chrome

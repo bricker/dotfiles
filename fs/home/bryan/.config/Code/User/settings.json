@@ -1,5 +1,4 @@
 {
-    "explorer.openEditors.visible": 0,
     "editor.fontSize": 12,
     "editor.renderWhitespace": "all",
     "editor.cursorStyle": "block",
@@ -30,7 +29,6 @@
     },
     "[ruby]": {
         "editor.tabSize": 2,
-        "editor.defaultFormatter": "Shopify.ruby-lsp",
         "editor.semanticHighlighting.enabled": true,
         "editor.formatOnSave": false,
     },
@@ -46,10 +44,16 @@
     "editor.acceptSuggestionOnCommitCharacter": false,
     "files.exclude": {
         "**/__pycache__": true,
+        "**/.build": true,
         "**/.classpath": true,
+        "**/.cloudsqlproxy": true,
         "**/.factorypath": true,
+        "**/.mypy_cache": true,
         "**/.project": true,
-        "**/.settings": true
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/.settings": true,
+        "**/*.egg-info": true
     },
     "editor.suggestSelection": "recentlyUsed",
     "go.formatTool": "goimports",
@@ -85,8 +89,8 @@
     "editor.accessibilitySupport": "off",
     "redhat.telemetry.enabled": false,
     "[dart]": {
-        "editor.formatOnSave": true,
-        "editor.formatOnType": true,
+        "editor.formatOnSave": false,
+        "editor.formatOnType": false,
         "editor.rulers": [
             80
         ],
@@ -134,98 +138,28 @@
     "zenMode.restore": false,
     "markdownlint.focusMode": true,
     "editor.autoClosingQuotes": "never",
-    "ruby.locate": {
-
-        "exclude": "{**/@(test|spec|tmp|.*),**/@(test|spec|tmp|.*)/**}",
-        "include": "**/*.rb"
-    },
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.typeCheckingMode": "basic",
-    "vscode-run-rspec-file.custom-command": "bundle exec rspec --color",
     "files.trimFinalNewlines": false,
     "files.insertFinalNewline": false,
-    "byesig.fold": false,
-    "byesig.enabled": true,
-    "byesig.opacity": 0.5,
-    "rubyLsp.rubyVersionManager": "chruby",
-    "sorbet.enabled": true,
-    "rubyLsp.enabledFeatures": {
-        "codeActions": false,
-        "diagnostics": true,
-        "documentHighlights": true,
-        "documentLink": true,
-        "documentSymbols": true,
-        "foldingRanges": true,
-        "formatting": false,
-        "hover": true,
-        "inlayHint": true,
-        "onTypeFormatting": false,
-        "selectionRanges": true,
-        "semanticHighlighting": true
-    },
     "editor.codeActionsOnSave": {
 
     },
-    "sorbet.lspConfigs": [
 
-
-        {
-            "id": "stable",
-            "name": "Sorbet",
-            "description": "Stable Sorbet Ruby IDE features",
-            "cwd": "${workspaceFolder}",
-            "command": [
-                "bundle",
-                "exec",
-                "srb",
-                "typecheck",
-                "--lsp"
-            ]
-        },
-        {
-            "id": "beta",
-            "name": "Sorbet (Beta)",
-            "description": "Beta Sorbet Ruby IDE features",
-            "cwd": "${workspaceFolder}",
-            "command": [
-                "bundle",
-                "exec",
-                "srb",
-                "typecheck",
-                "--lsp",
-                "--enable-all-beta-lsp-features"
-            ]
-        },
-        {
-            "id": "experimental",
-            "name": "Sorbet (Experimental)",
-            "description": "Experimental Sorbet Ruby IDE features (warning: crashy, for developers only)",
-            "cwd": "${workspaceFolder}",
-            "command": [
-                "bundle",
-                "exec",
-                "srb",
-                "typecheck",
-                "--lsp",
-                "--enable-all-experimental-lsp-features"
-            ]
-        }
-    ],
     "editor.language.brackets": [
 
     ],
     "terminal.integrated.env.linux": {
         "TERM_INTEGRATED": "1"
     },
-    "go.toolsManagement.autoUpdate": true,
     "[python]": {
         "editor.tabSize": 4,
-        "editor.formatOnType": true
+        "editor.formatOnType": false,
+        "editor.defaultFormatter": "ms-python.python"
     },
     "editor.indentSize": "tabSize",
     "python.analysis.autoImportCompletions": true,
-    "python.analysis.autoImportUserSymbols": true,
     "python.autoComplete.extraPaths": [
 
     ],
@@ -239,13 +173,12 @@
     "python.formatting.provider": "black",
     "python.testing.unittestEnabled": true,
     "python.linting.mypyEnabled": true,
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
     "python.diagnostics.sourceMapsEnabled": true,
     "todo-tree.filtering.excludeGlobs": [
         "**/node_modules/*/**",
-        "**/.venv/*/**"
+        "**/.venv/*/**",
+        "**/__pycache__",
+        "**/.mypy_cache"
     ],
     "todo-tree.tree.tagsOnly": true,
     "editor.suggest.matchOnWordStartOnly": false,
@@ -268,7 +201,16 @@
                     "fontStyle": "italic"
                 }
             }
-        ]
+        ],
+    },
+    "workbench.colorCustomizations": {
+        "[Default Light Modern]": {
+            "tab.activeForeground": "#000000",
+            "editor.findMatchBorder": "#000000",
+        },
+        "[Default Dark Modern]": {
+            "editor.findMatchBorder": "#ffffff",
+        }
     },
     "editor.suggestOnTriggerCharacters": false,
     "editor.stickyScroll.enabled": true,
@@ -279,5 +221,22 @@
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "workbench.cloudChanges.autoResume": "off",
-    "workbench.cloudChanges.continueOn": "off"
+    "workbench.cloudChanges.continueOn": "off",
+    "python.analysis.indexing": false,
+    "python.analysis.fixAll": [],
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "python.analysis.gotoDefinitionInStringLiteral": true,
+    "problems.defaultViewMode": "table",
+    "python.linting.lintOnSave": true,
+    "testing.defaultGutterClickAction": "debug",
+    "testing.automaticallyOpenPeekViewDuringAutoRun": true,
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "gitlens.plusFeatures.enabled": false,
+    "gitlens.codeLens.enabled": false,
+    "eslint.workingDirectories": [],
+    "editor.codeLens": false,
+    "json.schemas": [],
+    "terminal.integrated.scrollback": 1000,
+    "todo-tree.tree.autoRefresh": false
 }
