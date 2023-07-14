@@ -157,6 +157,7 @@ function installdconfeditor() {
     sudo apt install dconf-editor
 }
 
+
 #######################################################
 
 sudo apt update
@@ -191,6 +192,15 @@ if ask "Install jq?"; then installjq; fi
 if ask "Install yq?"; then installyq; fi
 if ask "Install terraform?"; then installterraform; fi
 if ask "Install dconf-editor?"; then installdconfeditor; fi
+
+if ask "Install flatpak?"; then
+    sudo apt install flatpack
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+fi
+
+if ask "Install Gnome Extension Manager?"; then
+    flatpak install flathub com.mattjakeman.ExtensionManager
+fi
 
 # TODO:
 # - apt default-jre
