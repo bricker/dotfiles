@@ -11,3 +11,5 @@
 	rebase = false
 [branch]
     autoSetupMerge = always
+[push]
+	autoSetupRemote = true
