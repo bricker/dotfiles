@@ -1,3 +1,3 @@
-function ggl --wraps='git pull origin (current branch)' --description 'alias ggl=git pull origin (current branch)'
-  git pull origin (gcb) $argv;
+function ggl --wraps='git pull --set-upstream origin (current branch)' --description 'alias ggl=git pull --set-upstream origin (current branch)'
+  git pull --set-upstream origin (gcb) $argv;
 end
