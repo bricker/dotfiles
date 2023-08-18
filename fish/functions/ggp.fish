@@ -1,3 +1,3 @@
-function ggp --wraps='git push origin' --description 'alias ggp=git push origin'
-  git push origin $(git branch --show-current) $argv; 
+function ggp --wraps='git push origin (current branch)' --description 'alias ggp=git push origin (current branch)'
+  git push origin (gcb) $argv;
 end
