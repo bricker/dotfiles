@@ -4,7 +4,8 @@
 	gpgsign = true
 [user]
 	name = Bryan Ricker
-	signingkey = 92A4461BD2AF1E93
+	signingkey = 3E88910119298EEF
+	email = git@bryanricker.com
 [init]
 	defaultBranch = main
 [pull]

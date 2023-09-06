@@ -1,0 +1,8 @@
+{
+  "name": "Notification Display Tweaks",
+  "description": "Minor style changes to default Gnome notification banner",
+  "uuid": "notification-tweaks@bryanricker.com",
+  "shell-version": [
+    "42"
+  ]
+}
