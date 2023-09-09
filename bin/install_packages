@@ -1,17 +1,12 @@
 #!/usr/bin/bash
 
+source "bin/_functions.bash"
+
 if test "$(whoami)" = "root"
 then
     echo "This program should not be run as root."
     exit 1
 fi
-
-function ask() {
-    echo ""
-    echo -n "$1 [Y/n] "
-    read input
-    test "$input" = "Y"
-}
 
 sudo apt update
 
@@ -163,32 +158,6 @@ fi
 if ask "Install flatpak?"; then
     sudo apt install -y flatpack
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-fi
-
-if ask "Install Gnome Extension Manager?"; then
-    flatpak install flathub com.mattjakeman.ExtensionManager
-fi
-
-if ask "Install Recommended Gnome Extensions?"; then
-    extensions=(
-        "sound-output-device-chooser@kgshank.net"
-        "emoji-selector@maestroschan.fr"
-        "bluetooth-quick-connect@bjarosze.gmail.com"
-        "just-perfection-desktop@just-perfection"
-    )
-
-    for extension_id in ${extensions:@}; do
-        out="/tmp/$extension_id.zip"
-        wget -O "$out" "https://extensions.gnome.org/download-extension/$extension_id.shell-extension.zip"
-        gnome-extensions install "$out"
-    done
-fi
-
-if ask "Install Custom Gnome Extensions?"; then
-    for extension_id in gnome/extensions/*; do
-        gnome-extensions pack --out-dir="/tmp" "$extension_id" && \
-        gnome-extensions install "/tmp/$extension_id.shell-extension.zip"
-    done
 fi
 
 # TODO:
