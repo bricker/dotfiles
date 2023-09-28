@@ -1,4 +1,4 @@
-set -gx GCLOUD_SDK_ROOT "$HOME/google-cloud-sdk"
+set -gx GCLOUD_SDK_ROOT "/usr/lib/google-cloud-sdk"
 fish_add_path -g $GCLOUD_SDK_ROOT/bin
 
 # The next line updates PATH for the Google Cloud SDK.
