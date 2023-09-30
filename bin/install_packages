@@ -128,12 +128,21 @@ if ask "Install Insomnia?"; then
     sudo dpkg -i /tmp/Insomnia-latest.deb
 fi
 
-if ask "Install pgadmin?"; then
-    curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
-    sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list'
+if ask "Install Beekeeper?"; then
+    wget -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
+
+    sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" > /etc/apt/sources.list.d/beekeeper-studio-app.list'
+
     sudo apt update
-    sudo apt install -y pgadmin4
+    sudo apt install -y beekeeper-studio
 fi
+
+# if ask "Install pgadmin?"; then
+#     curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+#     sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list'
+#     sudo apt update
+#     sudo apt install -y pgadmin4
+# fi
 
 if ask "Install jq?"; then
     sudo apt install -y jq
