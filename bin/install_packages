@@ -21,6 +21,8 @@ fi
 if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then
     rm -rf ~/.vim_runtime
     git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+    # Remove some of the included plugins that I don't like
+    rm -rf ~/.vim_runtime/auto-pairs
     ~/.vim_runtime/install_awesome_vimrc.sh
 fi
 
