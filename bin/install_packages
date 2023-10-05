@@ -14,6 +14,10 @@ if ask "Install git?"; then
     sudo apt install -y git
 fi
 
+if ask "Install libfuse2? (to run AppImages)"; then
+    sudo apt install -y libfuse2
+fi
+
 if ask "Install vim?"; then
     sudo apt install -y vim
 fi
@@ -110,6 +114,11 @@ fi
 
 if ask "Install postgresql?"; then
     sudo apt install -y postgresql postgresql-contrib libpq-dev
+
+    # for 23.04, see: https://wiki.postgresql.org/wiki/Apt
+    # sudo apt install -y postgresql-common
+    # sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+    # sudo apt update && sudo apt install -y postgresql
 fi
 
 if ask "Install github CLI?"; then
