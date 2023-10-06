@@ -44,11 +44,15 @@ function fish_prompt --description 'Write out the prompt'
         set suffix '>'
     end
 
-    if not set -q TERM_INTEGRATED
-        set_color 999999
-        printf "%s@%s " (whoami) (hostname)
-        set_color normal
-    end
+    # if not set -q TERM_INTEGRATED
+    #     set_color 999999
+    #     printf "%s@%s " (whoami) (hostname)
+    #     set_color normal
+    # end
+
+    set_color 999999
+    printf "%s " (date "+%H:%M")
+    set_color normal
 
     # PWD
     set_color $color_cwd
