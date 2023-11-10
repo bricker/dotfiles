@@ -14,6 +14,10 @@ if ask "Install git?"; then
     sudo apt install -y git
 fi
 
+if ask "Install libfuse2? (to run AppImages)"; then
+    sudo apt install -y libfuse2
+fi
+
 if ask "Install vim?"; then
     sudo apt install -y vim
 fi
@@ -110,6 +114,11 @@ fi
 
 if ask "Install postgresql?"; then
     sudo apt install -y postgresql postgresql-contrib libpq-dev
+
+    # for 23.04, see: https://wiki.postgresql.org/wiki/Apt
+    # sudo apt install -y postgresql-common
+    # sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+    # sudo apt update && sudo apt install -y postgresql
 fi
 
 if ask "Install github CLI?"; then
@@ -150,9 +159,6 @@ if ask "Install Beekeeper?"; then
     sudo apt install -y beekeeper-studio
 fi
 
-if ask "Install Emote?"; then
-    flatpak install com.tomjwatson.Emote
-fi
 
 # if ask "Install pgadmin?"; then
 #     curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
@@ -191,10 +197,24 @@ if ask "Install flatpak?"; then
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 fi
 
+if ask "Install Emote?"; then
+    flatpak install com.tomjwatson.Emote
+fi
+
+if ask "Install bluez?"; then
+    sudo apt install -y bluez
+fi
+
+if ask "Install blueman?"; then
+    sudo apt install -y blueman
+fi
+
+if ask "Install todoist?"; then
+    snap install todoist
+fi
 # TODO:
 # - apt default-jre
 # - apt maven
 # - swift
 # - imwheel
 # - xbindkeys?
-# - bluez?
