@@ -1,3 +1,3 @@
-function ls --description 'alias ls=ls -lA'
-  command ls -lA $argv; 
+function ls --description 'alias ls=ls --color -lAh'
+  command ls --color -lAh $argv;
 end
