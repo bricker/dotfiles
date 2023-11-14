@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -o pipefail
+
 source "bin/_functions.bash"
 
 if test "$(whoami)" = "root"
@@ -25,25 +27,25 @@ if ask "Install vim?"; then
     # vim-fish is unmaintained so I don't install it by default.
 fi
 
-if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then
+if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then (set -e
     rm -rf ~/.vim_runtime
+    # Removes some of the included plugins that I don't like
     git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
-    # Remove some of the included plugins that I don't like
     rm -rf ~/.vim_runtime/auto-pairs
     ~/.vim_runtime/install_awesome_vimrc.sh
-fi
+) fi
 
 if ask "Install tmux?"; then
     sudo apt install -y tmux
 fi
 
-if ask "Install Fish Shell?"; then
+if ask "Install Fish Shell?"; then (set -e
     echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_11/ /' | sudo tee /etc/apt/sources.list.d/shells:fish:release:3.list
     curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:3/Debian_11/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
     sudo apt update
     sudo apt install -y fish
     chsh --shell "$(which fish)"
-fi
+) fi
 
 if ask "Install Homebrew?"; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -70,20 +72,20 @@ if ask "Install pyenv?"; then
     brew install pyenv
 fi
 
-if ask "Install nvm?"; then
+if ask "Install nvm?"; then (set -e
     mkdir -p "$XDG_CONFIG_HOME/fish/plugins"
     rm -rf "$XDG_CONFIG_HOME/fish/plugins/nvm.fish"
     git -C "$XDG_CONFIG_HOME/fish/plugins" clone git@github.com:jorgebucaran/nvm.fish.git
     fish -C "update_plugin nvm.fish"
     fish -C "emit nvm_install" # FIXME: This is supposed to install $nvm_data but doesn't
-fi
+) fi
 
-if ask "Generate SSH Key?"; then
+if ask "Generate SSH Key?"; then (set -e
     ssh-keygen -t ed25519 -a 100 -C "$(whoami)@$(hostname)"
     ssh-keygen -y -f ~/.ssh/id_ed25519
-fi
+) fi
 
-if ask "Install gcloud CLI?"; then
+if ask "Install gcloud CLI?"; then (set -e
     sudo apt install -y apt-transport-https ca-certificates gnupg
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
@@ -97,9 +99,9 @@ if ask "Install gcloud CLI?"; then
         google-cloud-sdk-app-engine-python-extras
 
     gcloud init
-fi
+) fi
 
-if ask "Install Docker Desktop?"; then
+if ask "Install Docker Desktop?"; then (set -e
     # Add Docker's official GPG key:
     sudo apt update
     sudo apt install ca-certificates curl gnupg
@@ -108,12 +110,14 @@ if ask "Install Docker Desktop?"; then
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
     # Add the repository to Apt sources:
-    echo \
-        "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-        "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
     sudo apt update
-fi
+
+    filename="docker-desktop-4.25.1-amd64.deb"
+    wget -O /tmp/$filename "https://desktop.docker.com/linux/main/amd64/$filename"
+    sudo apt-get install "/tmp/$filename"
+) fi
 
 if ask "Install postgresql?"; then
     sudo apt install -y postgresql postgresql-contrib libpq-dev
@@ -124,43 +128,40 @@ if ask "Install postgresql?"; then
     # sudo apt update && sudo apt install -y postgresql
 fi
 
-if ask "Install github CLI?"; then
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && sudo apt update \
-    && sudo apt install gh -y
-fi
+if ask "Install github CLI?"; then (set -e
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    sudo apt update
+    sudo apt install gh -y
+) fi
 
 if ask "Install xclip?"; then
     sudo apt install -y xclip
 fi
 
-if ask "Install ngrok?"; then
-    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
-        sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && \
-        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | \
-        sudo tee /etc/apt/sources.list.d/ngrok.list && \
-        sudo apt update && \
-        sudo apt install -y ngrok
+if ask "Install ngrok?"; then (set -e
+    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+    echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+    sudo apt update
+    sudo apt install -y ngrok
 
-    read -sp "Enter your ngrok auth token: " authtoken
-    ngrok config add-authtoken $authtoken
-fi
+    read -rsp "Enter your ngrok auth token: " authtoken
+    ngrok config add-authtoken "$authtoken"
+) fi
 
-if ask "Install Insomnia?"; then
+if ask "Install Insomnia?"; then (set -e
     curl -L -o /tmp/Insomnia-latest.deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
     sudo dpkg -i /tmp/Insomnia-latest.deb
-fi
+) fi
 
-if ask "Install Beekeeper?"; then
+if ask "Install Beekeeper?"; then (set -e
     wget -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
-
-    sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" > /etc/apt/sources.list.d/beekeeper-studio-app.list'
+    echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
 
     sudo apt update
     sudo apt install -y beekeeper-studio
-fi
+) fi
 
 
 # if ask "Install pgadmin?"; then
@@ -183,22 +184,22 @@ fi
 #     sudo apt install -y nodejs
 # fi
 
-if ask "Install terraform?"; then
+if ask "Install terraform?"; then (set -e
     wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
     sudo apt update
     sudo apt install -y terraform
-fi
+) fi
 
 
 if ask "Install dconf-editor?"; then
     sudo apt install -y dconf-editor
 fi
 
-if ask "Install flatpak?"; then
+if ask "Install flatpak?"; then (set -e
     sudo apt install -y flatpack
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-fi
+) fi
 
 if ask "Install Emote?"; then
     flatpak install com.tomjwatson.Emote
