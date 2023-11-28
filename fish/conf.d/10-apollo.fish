@@ -1,0 +1,2 @@
+set -gx APOLLO_ELV2_LICENSE "accept"
+set -gx APOLLO_TELEMETRY_DISABLED true
