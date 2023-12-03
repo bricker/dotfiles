@@ -72,6 +72,10 @@ if ask "Install pyenv?"; then
     brew install pyenv
 fi
 
+if ask "Install rust?"; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+fi
+
 if ask "Install nvm?"; then (set -e
     mkdir -p "$XDG_CONFIG_HOME/fish/plugins"
     rm -rf "$XDG_CONFIG_HOME/fish/plugins/nvm.fish"
