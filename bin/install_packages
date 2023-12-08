@@ -12,6 +12,10 @@ fi
 
 sudo apt update
 
+if ask "Install curl?"; then
+    sudo apt install -y curl
+fi
+
 if ask "Install git?"; then
     sudo apt install -y git
 fi
@@ -68,7 +72,24 @@ if ask "Install chruby?"; then
 fi
 
 if ask "Install pyenv?"; then
-    sudo apt install -y python-tk python3-tk tk-dev
+    # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+    sudo apt install -y \
+        python-tk \
+        python3-tk \
+        tk-dev \
+        build-essential \
+        libssl-dev \
+        zlib1g-dev \
+        libbz2-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        libncursesw5-dev \
+        xz-utils \
+        libxml2-dev \
+        libxmlsec1-dev \
+        libffi-dev \
+        liblzma-dev
+
     brew install pyenv
 fi
 
