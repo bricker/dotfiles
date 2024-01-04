@@ -153,6 +153,15 @@ if ask "Install postgresql?"; then
     # sudo apt update && sudo apt install -y postgresql
 fi
 
+if ask "Install pgadmin?"; then
+    curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+
+    sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+
+    sudo apt update
+    sudo apt install -y pgadmin4-desktop
+fi
+
 if ask "Install github CLI?"; then (set -e
     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
     sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
@@ -188,13 +197,6 @@ if ask "Install Beekeeper?"; then (set -e
     sudo apt install -y beekeeper-studio
 ) fi
 
-
-# if ask "Install pgadmin?"; then
-#     curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
-#     sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list'
-#     sudo apt update
-#     sudo apt install -y pgadmin4
-# fi
 
 if ask "Install jq?"; then
     sudo apt install -y jq

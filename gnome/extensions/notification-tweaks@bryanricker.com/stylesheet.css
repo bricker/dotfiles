@@ -1,7 +1,52 @@
 .notification-banner {
-  background-color: rgba(127,0,0,0.5);
+  background-color: rgb(0,0,0);
+  color: rgb(255,255,255);
+  box-shadow: none;
   width: 20em;
-  min-height: 20px;
-  border-radius: 16px;
-  margin: 4px;
+  border: none;
 }
+
+
+.notification-banner:hover, .notification-banner:focus, .notification-banner:active {
+  box-shadow: none;
+}
+
+.message {
+  padding: 0;
+  spacing: 0;
+}
+
+.message .message-content {
+  padding: 0;
+  spacing: 0;
+}
+
+.message .message-title-box {
+}
+
+.message .message-title {
+  padding: 0;
+  spacing: 0;
+}
+
+.message .message-secondary-bin {
+  padding: 0;
+  spacing: 0;
+}
+
+.message .message-body {
+}
+
+.message .message-close-button {
+}
+
+.message .message-icon-bin {
+}
+
+.message .message-secondary-bin > .event-time {
+}
+
+/* .notification-button {
+  background-color: rgba(0,0,0,0.2);
+  color: rgba(255,255,255, 0.2);
+} */

@@ -22,9 +22,20 @@ const MessageTray = imports.ui.messageTray;
 
 const _originalCreateBanner = MessageTray.Notification.prototype.createBanner;
 
+function _setOpacityOnHover() {
+  this.opacity = this.hover ? 255 : 50;
+}
+
 function _customCreateBanner() {
   const banner = this.source.createBanner(this);
   banner.actor.setIcon(null);
+  banner.opacity = 50;
+  banner.connect('notify::hover', _setOpacityOnHover.bind(banner))
+
+  // banner.remove_style_class_name('message');
+  // banner.remove_style_class_name('notification-banner');
+  // banner.add_style_class_name('message-bcr');
+  // banner.add_style_class_name('notification-banner-bcr');
   return banner;
 }
 

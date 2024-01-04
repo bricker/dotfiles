@@ -14,19 +14,21 @@ if ask "Install Recommended Gnome Extensions?"; then
         "just-perfection-desktop@just-perfection"
     )
 
-    for extension_id in ${extensions:@}; do
+    for extension_id in "${extensions[@]}"; do
+        echo -n "Installing $extension_id..."
         out="/tmp/$extension_id.zip"
         wget -O "$out" "https://extensions.gnome.org/download-extension/$extension_id.shell-extension.zip"
         gnome-extensions install "$out"
+        echo " Done."
     done
 fi
 
 if ask "Install Custom Gnome Extensions?"; then
     for extension_path in gnome/extensions/*; do
         extension_id=$(basename "$extension_path")
-        echo "$extension_path"
-        echo "$extension_id"
+        echo -n "Installing $extension_id..."
         gnome-extensions pack --force --out-dir="/tmp" "$extension_path" && \
         gnome-extensions install --force "/tmp/$extension_id.shell-extension.zip"
+        echo " Done."
     done
 fi
