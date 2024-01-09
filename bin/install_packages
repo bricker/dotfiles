@@ -4,32 +4,27 @@ set -o pipefail
 
 source "bin/_functions.bash"
 
-if test "$(whoami)" = "root"
-then
+if test "$(whoami)" = "root"; then
     echo "This program should not be run as root."
     exit 1
 fi
 
 sudo apt update
 
-if ask "Install curl?"; then
+if ask "Install curl?"; then (
     sudo apt install -y curl
-fi
+) fi
 
-if ask "Install git?"; then
+if ask "Install git?"; then (
     sudo apt install -y git
-fi
+) fi
 
-if ask "Install libfuse2? (to run AppImages)"; then
-    sudo apt install -y libfuse2
-fi
-
-if ask "Install vim?"; then
+if ask "Install vim?"; then (
     sudo apt install -y vim
     mkdir -p ~/.vim/pack/plugins/start
     # Add vim plugins here.
     # vim-fish is unmaintained so I don't install it by default.
-fi
+) fi
 
 if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then (set -e
     rm -rf ~/.vim_runtime
@@ -39,11 +34,11 @@ if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then (set -e
     ~/.vim_runtime/install_awesome_vimrc.sh
 ) fi
 
-if ask "Install tmux?"; then
+if ask "Install tmux?"; then (
     sudo apt install -y tmux
-fi
+) fi
 
-if ask "Install Fish Shell?"; then (set -e
+if ask "Install Fish Shell?"; then (set -eo pipefail
     echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_11/ /' | sudo tee /etc/apt/sources.list.d/shells:fish:release:3.list
     curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:3/Debian_11/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
     sudo apt update
@@ -51,27 +46,19 @@ if ask "Install Fish Shell?"; then (set -e
     chsh --shell "$(which fish)"
 ) fi
 
-if ask "Install Homebrew?"; then
+if ask "Install Homebrew?"; then (
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
+) fi
 
-# if ask "Update System Python?"; then
-#     sudo add-apt-repository ppa:deadsnakes/ppa
-#     sudo apt update
-#     sudo apt install python3-pip python3.10-venv
-#     sudo apt install python3.11 python3.11-venv python3-pip python-tk python3-tk tk-dev
-#     sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 2
-# fi
-
-if ask "Install ruby-install?"; then
+if ask "Install ruby-install?"; then (
     brew install ruby-install
-fi
+) fi
 
-if ask "Install chruby?"; then
+if ask "Install chruby?"; then (
     brew install chruby-fish
-fi
+) fi
 
-if ask "Install pyenv?"; then
+if ask "Install pyenv?"; then (set -e
     # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
     sudo apt install -y \
         python-tk \
@@ -91,11 +78,11 @@ if ask "Install pyenv?"; then
         liblzma-dev
 
     brew install pyenv
-fi
+) fi
 
-if ask "Install rust?"; then
+if ask "Install rust?"; then (set -eo pipefail
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-fi
+) fi
 
 if ask "Install nvm?"; then (set -e
     mkdir -p "$XDG_CONFIG_HOME/fish/plugins"
@@ -110,7 +97,7 @@ if ask "Generate SSH Key?"; then (set -e
     ssh-keygen -y -f ~/.ssh/id_ed25519
 ) fi
 
-if ask "Install gcloud CLI?"; then (set -e
+if ask "Install gcloud CLI?"; then (set -eo pipefail
     sudo apt install -y apt-transport-https ca-certificates gnupg
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
@@ -126,7 +113,7 @@ if ask "Install gcloud CLI?"; then (set -e
     gcloud init
 ) fi
 
-if ask "Install Docker Desktop?"; then (set -e
+if ask "Install Docker Desktop?"; then (set -eo pipefail
     # Add Docker's official GPG key:
     sudo apt update
     sudo apt install ca-certificates curl gnupg
@@ -139,30 +126,41 @@ if ask "Install Docker Desktop?"; then (set -e
 
     sudo apt update
 
-    filename="docker-desktop-4.25.1-amd64.deb"
-    wget -O /tmp/$filename "https://desktop.docker.com/linux/main/amd64/$filename"
-    sudo apt-get install "/tmp/$filename"
+    install_deb "https://desktop.docker.com/linux/main/amd64/docker-desktop-4.25.1-amd64.deb"
 ) fi
 
-if ask "Install postgresql?"; then
-    sudo apt install -y postgresql postgresql-contrib libpq-dev
+if ask "Install postgresql?"; then (set -eo pipefail
+    echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc >/dev/null
+
+    sudo apt update
+    sudo apt install -y postgresql postgresql-contrib libpq-dev && \
+        sudo apt purge postgresql-14 && \
+        sudo apt purge postgresql-13
+
+    sudo pg_conftool set port 5432
+    sudo systemctl restart postgresql
+
+    me=$(whoami)
+    sudo -u postgres createuser -s "$me"
+    createdb # creates database for current user
 
     # for 23.04, see: https://wiki.postgresql.org/wiki/Apt
     # sudo apt install -y postgresql-common
     # sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
     # sudo apt update && sudo apt install -y postgresql
-fi
+) fi
 
-if ask "Install pgadmin?"; then
+if ask "Install pgadmin?"; then (set -eo pipefail
     curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
 
-    sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+    echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" | sudo tee /etc/apt/sources.list.d/pgadmin4.list
 
     sudo apt update
     sudo apt install -y pgadmin4-desktop
-fi
+) fi
 
-if ask "Install github CLI?"; then (set -e
+if ask "Install github CLI?"; then (set -eo pipefail
     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
     sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
@@ -170,11 +168,11 @@ if ask "Install github CLI?"; then (set -e
     sudo apt install gh -y
 ) fi
 
-if ask "Install xclip?"; then
+if ask "Install xclip?"; then (
     sudo apt install -y xclip
-fi
+) fi
 
-if ask "Install ngrok?"; then (set -e
+if ask "Install ngrok?"; then (set -eo pipefail
     curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
     echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
     sudo apt update
@@ -184,65 +182,90 @@ if ask "Install ngrok?"; then (set -e
     ngrok config add-authtoken "$authtoken"
 ) fi
 
-if ask "Install Insomnia?"; then (set -e
-    curl -L -o /tmp/Insomnia-latest.deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
-    sudo dpkg -i /tmp/Insomnia-latest.deb
-) fi
-
-if ask "Install Beekeeper?"; then (set -e
-    wget -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
-    echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
-
-    sudo apt update
-    sudo apt install -y beekeeper-studio
-) fi
-
-
-if ask "Install jq?"; then
+if ask "Install jq?"; then (
     sudo apt install -y jq
-fi
+) fi
 
-if ask "Install yq?"; then
+if ask "Install yq?"; then (
     brew install -y yq
-fi
+) fi
 
-# if ask "Update system node?"; then
-#     curl -sL https://deb.nodesource.com/setup_18.x | sudo bash -
-#     sudo apt install -y nodejs
-# fi
-
-if ask "Install terraform?"; then (set -e
-    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+if ask "Install terraform?"; then (set -eo pipefail
+    wget --quiet -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
     sudo apt update
     sudo apt install -y terraform
 ) fi
 
 
-if ask "Install dconf-editor?"; then
+if ask "Install dconf-editor?"; then (
     sudo apt install -y dconf-editor
-fi
+) fi
 
 if ask "Install flatpak?"; then (set -e
     sudo apt install -y flatpack
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ) fi
 
-if ask "Install Emote?"; then
+if ask "Install libfuse2? (to run AppImages)"; then (
+    sudo apt install -y libfuse2
+) fi
+
+if ask "Install Emote?"; then (
     flatpak install com.tomjwatson.Emote
-fi
+) fi
 
-if ask "Install bluez?"; then
+if ask "Install bluez?"; then (
     sudo apt install -y bluez
-fi
+) fi
 
-if ask "Install blueman?"; then
+if ask "Install blueman?"; then (
     sudo apt install -y blueman
-fi
+) fi
 
-if ask "Install todoist?"; then
-    snap install todoist
-fi
+if ask "Install Insomnia?"; then (set -e
+    install_deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
+) fi
+
+if ask "Install Beekeeper?"; then (set -eo pipefail
+    wget --quiet -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
+    echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
+
+    sudo apt update
+    sudo apt install -y beekeeper-studio
+) fi
+
+if ask "Install Todoist?"; then (
+    sudo snap install todoist
+) fi
+
+if ask "Install drawio?"; then (
+    version=$(curl -s "https://api.github.com/repos/jgraph/drawio-desktop/releases/latest" | jq -r '.name')
+    install_deb "https://github.com/jgraph/drawio-desktop/releases/download/v$version/drawio-amd64-$version.deb"
+) fi
+
+if ask "Install Obsidian?"; then (
+    version=$(curl -s "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | jq -r '.name')
+    install_deb "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/obsidian_${version}_amd64.deb"
+) fi
+
+if ask "Install Slack?"; then (
+    version=$(sudo snap info slack | grep "latest/stable:" | cut -d" " -f7)
+    install_deb "https://downloads.slack-edge.com/releases/linux/$version/prod/x64/slack-desktop-$version-amd64.deb"
+) fi
+
+if ask "Install Google Chrome?"; then (
+    install_deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+) fi
+
+if ask "Install VSCode?"; then (
+    install_deb "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
+) fi
+
+if ask "Install 1Password?"; then (
+    install_deb "https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb"
+) fi
+
 # TODO:
 # - apt default-jre
 # - apt maven
