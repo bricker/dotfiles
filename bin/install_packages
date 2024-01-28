@@ -9,24 +9,51 @@ if test "$(whoami)" = "root"; then
     exit 1
 fi
 
+_TARGETPKG="$1"
+if test -n "$_TARGETPKG"; then
+    echo "TARGET PACKAGE: ${_TARGETPKG}"
+else
+    echo "NO TARGET PACKAGE"
+fi
+
 sudo apt update
 
-if ask "Install curl?"; then (
+_TARGETFULFILLED=false
+function _shouldinstall () {
+    local pkg="$1"
+    local question="$2"
+
+    if $_TARGETFULFILLED; then
+        return 1
+    elif test -n "$_TARGETPKG"; then
+        if test "$_TARGETPKG" == "$pkg"; then
+            _TARGETFULFILLED=true
+            return 0
+        else
+            return 1
+        fi
+    else
+        ask "$question"
+        return
+    fi
+}
+
+if _shouldinstall "curl" "Install curl?"; then (
     sudo apt install -y curl
 ) fi
 
-if ask "Install git?"; then (
+if _shouldinstall "git" "Install git?"; then (
     sudo apt install -y git
 ) fi
 
-if ask "Install vim?"; then (
+if _shouldinstall "vim" "Install vim?"; then (
     sudo apt install -y vim
     mkdir -p ~/.vim/pack/plugins/start
     # Add vim plugins here.
     # vim-fish is unmaintained so I don't install it by default.
 ) fi
 
-if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then (set -e
+if _shouldinstall "vimrc" "Install github:amix/vimrc? (Warning: Destructive!)"; then (set -e
     rm -rf ~/.vim_runtime
     # Removes some of the included plugins that I don't like
     git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
@@ -34,11 +61,11 @@ if ask "Install github:amix/vimrc? (Warning: Destructive!)"; then (set -e
     ~/.vim_runtime/install_awesome_vimrc.sh
 ) fi
 
-if ask "Install tmux?"; then (
+if _shouldinstall "tmux" "Install tmux?"; then (
     sudo apt install -y tmux
 ) fi
 
-if ask "Install Fish Shell?"; then (set -eo pipefail
+if _shouldinstall "fish" "Install Fish Shell?"; then (set -eo pipefail
     echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_11/ /' | sudo tee /etc/apt/sources.list.d/shells:fish:release:3.list
     curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:3/Debian_11/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
     sudo apt update
@@ -46,19 +73,19 @@ if ask "Install Fish Shell?"; then (set -eo pipefail
     chsh --shell "$(which fish)"
 ) fi
 
-if ask "Install Homebrew?"; then (
+if _shouldinstall "homebrew" "Install Homebrew?"; then (
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ) fi
 
-if ask "Install ruby-install?"; then (
+if _shouldinstall "ruby-install" "Install ruby-install?"; then (
     brew install ruby-install
 ) fi
 
-if ask "Install chruby?"; then (
+if _shouldinstall "chruby" "Install chruby?"; then (
     brew install chruby-fish
 ) fi
 
-if ask "Install pyenv?"; then (set -e
+if _shouldinstall "pyenv" "Install pyenv?"; then (set -e
     # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
     sudo apt install -y \
         python-tk \
@@ -80,11 +107,14 @@ if ask "Install pyenv?"; then (set -e
     brew install pyenv
 ) fi
 
-if ask "Install rust?"; then (set -eo pipefail
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+if _shouldinstall "rust" "Install rust?"; then (set -eo pipefail
+    _tempfile=$(mktemp)
+    curl --proto '=https' --tlsv1.2 -sSf -o "$_tempfile" https://sh.rustup.rs && \
+        sh "$_tempfile" --no-modify-path
+    rm "$_tempfile"
 ) fi
 
-if ask "Install nvm?"; then (set -e
+if _shouldinstall "nvm" "Install nvm?"; then (set -e
     mkdir -p "$XDG_CONFIG_HOME/fish/plugins"
     rm -rf "$XDG_CONFIG_HOME/fish/plugins/nvm.fish"
     git -C "$XDG_CONFIG_HOME/fish/plugins" clone git@github.com:jorgebucaran/nvm.fish.git
@@ -92,12 +122,12 @@ if ask "Install nvm?"; then (set -e
     fish -C "emit nvm_install" # FIXME: This is supposed to install $nvm_data but doesn't
 ) fi
 
-if ask "Generate SSH Key?"; then (set -e
+if _shouldinstall "ssh-key" "Generate SSH Key?"; then (set -e
     ssh-keygen -t ed25519 -a 100 -C "$(whoami)@$(hostname)"
     ssh-keygen -y -f ~/.ssh/id_ed25519
 ) fi
 
-if ask "Install gcloud CLI?"; then (set -eo pipefail
+if _shouldinstall "gcloud" "Install gcloud CLI?"; then (set -eo pipefail
     sudo apt install -y apt-transport-https ca-certificates gnupg
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
@@ -113,7 +143,7 @@ if ask "Install gcloud CLI?"; then (set -eo pipefail
     gcloud init
 ) fi
 
-if ask "Install Docker Desktop?"; then (set -eo pipefail
+if _shouldinstall "docker" "Install Docker Desktop?"; then (set -eo pipefail
     # Add Docker's official GPG key:
     sudo apt update
     sudo apt install ca-certificates curl gnupg
@@ -129,7 +159,7 @@ if ask "Install Docker Desktop?"; then (set -eo pipefail
     install_deb "https://desktop.docker.com/linux/main/amd64/docker-desktop-4.25.1-amd64.deb"
 ) fi
 
-if ask "Install postgresql?"; then (set -eo pipefail
+if _shouldinstall "postgresql" "Install postgresql?"; then (set -eo pipefail
     echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc >/dev/null
 
@@ -151,7 +181,7 @@ if ask "Install postgresql?"; then (set -eo pipefail
     # sudo apt update && sudo apt install -y postgresql
 ) fi
 
-if ask "Install pgadmin?"; then (set -eo pipefail
+if _shouldinstall "pgadmin" "Install pgadmin?"; then (set -eo pipefail
     curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
 
     echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" | sudo tee /etc/apt/sources.list.d/pgadmin4.list
@@ -160,7 +190,7 @@ if ask "Install pgadmin?"; then (set -eo pipefail
     sudo apt install -y pgadmin4-desktop
 ) fi
 
-if ask "Install github CLI?"; then (set -eo pipefail
+if _shouldinstall "gh" "Install github CLI?"; then (set -eo pipefail
     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
     sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
@@ -168,11 +198,11 @@ if ask "Install github CLI?"; then (set -eo pipefail
     sudo apt install gh -y
 ) fi
 
-if ask "Install xclip?"; then (
+if _shouldinstall "xclip" "Install xclip?"; then (
     sudo apt install -y xclip
 ) fi
 
-if ask "Install ngrok?"; then (set -eo pipefail
+if _shouldinstall "ngrok" "Install ngrok?"; then (set -eo pipefail
     curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
     echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
     sudo apt update
@@ -182,15 +212,15 @@ if ask "Install ngrok?"; then (set -eo pipefail
     ngrok config add-authtoken "$authtoken"
 ) fi
 
-if ask "Install jq?"; then (
+if _shouldinstall "jq" "Install jq?"; then (
     sudo apt install -y jq
 ) fi
 
-if ask "Install yq?"; then (
+if _shouldinstall "yq" "Install yq?"; then (
     brew install -y yq
 ) fi
 
-if ask "Install terraform?"; then (set -eo pipefail
+if _shouldinstall "terraform" "Install terraform?"; then (set -eo pipefail
     wget --quiet -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
     sudo apt update
@@ -198,36 +228,36 @@ if ask "Install terraform?"; then (set -eo pipefail
 ) fi
 
 
-if ask "Install dconf-editor?"; then (
+if _shouldinstall "dconf-editor" "Install dconf-editor?"; then (
     sudo apt install -y dconf-editor
 ) fi
 
-if ask "Install flatpak?"; then (set -e
+if _shouldinstall "flatpak" "Install flatpak?"; then (set -e
     sudo apt install -y flatpack
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ) fi
 
-if ask "Install libfuse2? (to run AppImages)"; then (
+if _shouldinstall "libfuse2" "Install libfuse2? (to run AppImages)"; then (
     sudo apt install -y libfuse2
 ) fi
 
-if ask "Install Emote?"; then (
+if _shouldinstall "emote" "Install Emote?"; then (
     flatpak install com.tomjwatson.Emote
 ) fi
 
-if ask "Install bluez?"; then (
+if _shouldinstall "bluez" "Install bluez?"; then (
     sudo apt install -y bluez
 ) fi
 
-if ask "Install blueman?"; then (
+if _shouldinstall "blueman" "Install blueman?"; then (
     sudo apt install -y blueman
 ) fi
 
-if ask "Install Insomnia?"; then (set -e
+if _shouldinstall "insomnia" "Install Insomnia?"; then (set -e
     install_deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
 ) fi
 
-if ask "Install Beekeeper?"; then (set -eo pipefail
+if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -eo pipefail
     wget --quiet -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
     echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
 
@@ -235,34 +265,34 @@ if ask "Install Beekeeper?"; then (set -eo pipefail
     sudo apt install -y beekeeper-studio
 ) fi
 
-if ask "Install Todoist?"; then (
+if _shouldinstall "todoist" "Install Todoist?"; then (
     sudo snap install todoist
 ) fi
 
-if ask "Install drawio?"; then (
+if _shouldinstall "drawio" "Install drawio?"; then (
     version=$(curl -s "https://api.github.com/repos/jgraph/drawio-desktop/releases/latest" | jq -r '.name')
     install_deb "https://github.com/jgraph/drawio-desktop/releases/download/v$version/drawio-amd64-$version.deb"
 ) fi
 
-if ask "Install Obsidian?"; then (
+if _shouldinstall "obsidian" "Install Obsidian?"; then (
     version=$(curl -s "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | jq -r '.name')
     install_deb "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/obsidian_${version}_amd64.deb"
 ) fi
 
-if ask "Install Slack?"; then (
+if _shouldinstall "slack" "Install Slack?"; then (
     version=$(sudo snap info slack | grep "latest/stable:" | cut -d" " -f7)
     install_deb "https://downloads.slack-edge.com/releases/linux/$version/prod/x64/slack-desktop-$version-amd64.deb"
 ) fi
 
-if ask "Install Google Chrome?"; then (
+if _shouldinstall "chrome" "Install Google Chrome?"; then (
     install_deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 ) fi
 
-if ask "Install VSCode?"; then (
+if _shouldinstall "vscode" "Install VSCode?"; then (
     install_deb "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
 ) fi
 
-if ask "Install 1Password?"; then (
+if _shouldinstall "1password" "Install 1Password?"; then (
     install_deb "https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb"
 ) fi
 
