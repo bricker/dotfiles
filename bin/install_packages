@@ -9,33 +9,29 @@ if test "$(whoami)" = "root"; then
     exit 1
 fi
 
-_TARGETPKG="$1"
-if test -n "$_TARGETPKG"; then
-    echo "TARGET PACKAGE: ${_TARGETPKG}"
-else
-    echo "NO TARGET PACKAGE"
-fi
 
 sudo apt update
 
+_TARGETPKG="$1"
 _TARGETFULFILLED=false
+
 function _shouldinstall () {
     local pkg="$1"
     local question="$2"
 
     if $_TARGETFULFILLED; then
         return 1
-    elif test -n "$_TARGETPKG"; then
+    fi
+
+    if test -n "$_TARGETPKG"; then
         if test "$_TARGETPKG" == "$pkg"; then
             _TARGETFULFILLED=true
-            return 0
         else
             return 1
         fi
-    else
-        ask "$question"
-        return
     fi
+
+    ask "$question"
 }
 
 if _shouldinstall "curl" "Install curl?"; then (
@@ -59,6 +55,8 @@ if _shouldinstall "vimrc" "Install github:amix/vimrc? (Warning: Destructive!)"; 
     git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
     rm -rf ~/.vim_runtime/auto-pairs
     ~/.vim_runtime/install_awesome_vimrc.sh
+
+    L_hardlink "$HOME/dotfiles/fs/home/bryan/.vim_runtime/my_configs.vim" "$HOME/.vim_runtime/"
 ) fi
 
 if _shouldinstall "tmux" "Install tmux?"; then (

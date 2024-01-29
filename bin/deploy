@@ -1,23 +1,29 @@
-#!/usr/bin/env -S bash -eo pipefail
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+source "bin/_functions.bash"
 
 deploy-home() {
-    cp -alviu fs/home/bryan/. "$HOME"
+    L_hardlink fs/home/bryan/. "$HOME"
 }
 
 deploy() {
     local dir="$1"
-    sudo cp -alviu "fs/$dir/." "/$dir"
+    L_hardlink_sudo "fs/$dir/." "/$dir"
 }
 
-main() {
-    local kernel=$(uname -s)
+main() (
+    local kernel
+    kernel=$(uname -s)
     echo "Kernel: ${kernel}"
-    set -u
 
     case "$kernel" in
         "Linux")
-            local dist=$(lsb_release -is)
+            local dist
+            dist=$(lsb_release -is)
             echo "Distribution: ${dist}"
+
             case "$dist" in
                 "Ubuntu")
                     deploy usr
@@ -42,11 +48,11 @@ main() {
             echo "Kernel not supported: ${kernel}"
             exit 1
     esac
-}
+)
 
 if [ "$(whoami)" == "root" ]; then
     echo "this program should not be run as root."
     exit 1
 fi
 
-main "$1"
+main

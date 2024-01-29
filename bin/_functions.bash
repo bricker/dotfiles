@@ -11,3 +11,11 @@ function install_deb() (set -eu
     wget --quiet -O "$outfile" "$url"
     sudo apt install "$outfile"
 )
+
+function L_hardlink() (set -eu
+    cp -alviu "$1" "$2"
+)
+
+function L_hardlink_sudo() (set -eu
+    sudo cp -alviu "$1" "$2"
+)
