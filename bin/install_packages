@@ -239,6 +239,15 @@ if _shouldinstall "libfuse2" "Install libfuse2? (to run AppImages)"; then (
     sudo apt install -y libfuse2
 ) fi
 
+if _shouldinstall "lm-sensors" "Install lm-sensors and run sensors-detect?"; then (
+    sudo apt install -y lm-sensors
+    sudo sensors-detect
+) fi
+
+if _shouldinstall "psensor" "Install psensor?"; then (
+    sudo apt install -y psensor
+) fi
+
 if _shouldinstall "emote" "Install Emote?"; then (
     flatpak install com.tomjwatson.Emote
 ) fi
