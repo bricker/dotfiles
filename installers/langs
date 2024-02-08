@@ -1,0 +1,58 @@
+#!/usr/bin/bash
+
+set -uo pipefail
+
+if test "$(whoami)" = "root"; then
+    echo "This program should not be run as root."
+    exit 1
+fi
+
+source "installers/_functions.bash"
+
+sudo apt update
+
+if _shouldinstall "ruby-install" "Install ruby-install?"; then (
+    brew install ruby-install
+) fi
+
+if _shouldinstall "chruby" "Install chruby-fish?"; then (
+    brew install chruby-fish
+) fi
+
+if _shouldinstall "pyenv" "Install pyenv?"; then (set -e
+    # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+    sudo apt install -y \
+        python3-tk \
+        tk-dev \
+        build-essential \
+        libssl-dev \
+        zlib1g-dev \
+        libbz2-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        libncursesw5-dev \
+        xz-utils \
+        libxml2-dev \
+        libxmlsec1-dev \
+        libffi-dev \
+        liblzma-dev
+
+    brew install pyenv
+) fi
+
+if _shouldinstall "nvm" "Install nvm.fish? (Warning: Destructive!)"; then (set -e
+    _pdir="$HOME/.config/fish/plugins"
+    _sdir="$_pdir/nvm.fish"
+    mkdir -p $_pdir 
+    rm -rf "$_sdir"
+    git clone --depth=1 https://github.com/jorgebucaran/nvm.fish "$_sdir"
+    L_install_fish_plugin "nvm.fish"
+    fish --login --command "emit nvm_install" # FIXME: This is supposed to install $nvm_data but doesn't
+) fi
+
+if _shouldinstall "rust" "Install rust?"; then (set -eo pipefail
+    _tempfile=$(mktemp)
+    curl --proto '=https' --tlsv1.2 -sSf -o "$_tempfile" https://sh.rustup.rs && \
+        sh "$_tempfile" --no-modify-path
+    rm "$_tempfile"
+) fi

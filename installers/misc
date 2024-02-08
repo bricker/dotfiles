@@ -1,0 +1,58 @@
+#!/usr/bin/bash
+
+set -uo pipefail
+
+if test "$(whoami)" = "root"; then
+    echo "This program should not be run as root."
+    exit 1
+fi
+
+source "installers/_functions.bash"
+
+sudo apt update
+
+if _shouldinstall "libfuse2" "Install libfuse2? (to run AppImages from Desktop)"; then (
+    sudo apt install -y libfuse2
+) fi
+
+if _shouldinstall "lm-sensors" "Install lm-sensors and run sensors-detect?"; then (
+    sudo apt install -y lm-sensors
+    sudo sensors-detect
+) fi
+
+if _shouldinstall "psensor" "Install psensor?"; then (
+    sudo apt install -y psensor
+) fi
+
+if _shouldinstall "bluez" "Install bluez?"; then (
+    sudo apt install -y bluez
+) fi
+
+if _shouldinstall "blueman" "Install blueman?"; then (
+    sudo apt install -y blueman
+) fi
+
+if _shouldinstall "postgresql" "Install & setup postgresql?"; then (set -eo pipefail
+    # https://wiki.postgresql.org/wiki/Apt
+    sudo apt install -y postgresql-common
+    sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+    sudo apt update
+
+    sudo apt install -y \
+        postgresql \
+        postgresql-contrib \
+        libpq-dev && \
+    sudo apt purge postgresql-14 && \
+    sudo apt purge postgresql-13
+
+    sudo pg_conftool set port 5432
+    sudo systemctl restart postgresql
+
+    me=$(whoami)
+    sudo -u postgres createuser -s "$me"
+    createdb # creates database for current user
+) fi
+
+if _shouldinstall "yq" "Install yq?"; then (
+    brew install yq
+) fi

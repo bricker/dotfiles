@@ -1,7 +1,7 @@
 #!/usr/bin/env -S bash -e
 
 main() {
-    if [ -z "$TMUX" ]; then
+    if test -z "$TMUX"; then
         vim "$1"
         exit $?
     fi

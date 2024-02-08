@@ -2,15 +2,15 @@
 
 set -euo pipefail
 
-source "bin/_functions.bash"
+source "installers/_functions.bash"
 
 deploy-home() {
-    L_hardlink fs/home/bryan/. "$HOME"
+    _hardlink fs/home/bryan/. "$HOME"
 }
 
 deploy() {
     local dir="$1"
-    L_hardlink_sudo "fs/$dir/." "/$dir"
+    _cp_sudo "fs/$dir/." "/$dir"
 }
 
 main() (
@@ -26,7 +26,6 @@ main() (
 
             case "$dist" in
                 "Ubuntu")
-                    deploy usr
                     deploy etc
                     deploy-home
                     ;;
