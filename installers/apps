@@ -9,24 +9,27 @@ fi
 
 source "installers/_functions.bash"
 
-sudo apt update
-
 if _shouldinstall "docker" "Install Docker Desktop?"; then (set -eo pipefail
-    # Add Docker's official GPG key:
-    sudo apt install -y \
+    # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+    # Add Docker's official GPG key
+    sudo apt install -yq \
         ca-certificates \
-        curl \
-        gnupg
+        curl
+    # gnupg was here ^ before, it's unclear why it was needed though.
+
     sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-    # Add the repository to Apt sources:
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    # Add the repository to Apt sources
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-    sudo apt update
+    sudo apt update -qq
 
-    install_deb "https://desktop.docker.com/linux/main/amd64/docker-desktop-4.25.1-amd64.deb"
+    # This is the latest docker version as of the time of writing this script. I couldn't find a way to download the latest version. The app will notify you of an update anyways.
+    _install_deb "https://desktop.docker.com/linux/main/amd64/139021/docker-desktop-4.28.0-amd64.deb"
+
+    pass init "0BD24AC2020A221D"
 ) fi
 
 if _shouldinstall "pgadmin" "Install pgadmin?"; then (set -eo pipefail
@@ -34,20 +37,29 @@ if _shouldinstall "pgadmin" "Install pgadmin?"; then (set -eo pipefail
 
     echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" | sudo tee /etc/apt/sources.list.d/pgadmin4.list
 
-    sudo apt update
-    sudo apt install -y pgadmin4-desktop
+    sudo apt update -qq
+    sudo apt install -yq pgadmin4-desktop
 ) fi
 
 if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -eo pipefail
-    wget --quiet -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
-    echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
+    # https://snapcraft.io/beekeeper-studio
+    # Publisher: https://snapcraft.io/publisher/matthew-rathbone
+    # The publisher "matthew-rathbone" is the co-creator of Beekeeper and active contributor to the project.
+    sudo snap install beekeeper-studio
 
-    sudo apt update
-    sudo apt install -y beekeeper-studio
+    # wget --quiet -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
+    # echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
+
+    # sudo apt update -qq
+    # sudo apt install -yq beekeeper-studio
 ) fi
 
 if _shouldinstall "insomnia" "Install Insomnia?"; then (set -e
-    install_deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
+    _install_deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
+) fi
+
+if _shouldinstall "postman" "Install Postman?"; then (set -e
+    sudo snap install postman
 ) fi
 
 if _shouldinstall "todoist" "Install Todoist?"; then (
@@ -55,30 +67,36 @@ if _shouldinstall "todoist" "Install Todoist?"; then (
 ) fi
 
 if _shouldinstall "drawio" "Install drawio?"; then (
-    version=$(curl -s "https://api.github.com/repos/jgraph/drawio-desktop/releases/latest" | jq -r '.name')
-    install_deb "https://github.com/jgraph/drawio-desktop/releases/download/v$version/drawio-amd64-$version.deb"
+    sudo snap install drawio
+    # version=$(curl -s "https://api.github.com/repos/jgraph/drawio-desktop/releases/latest" | jq -r '.name')
+    # _install_deb "https://github.com/jgraph/drawio-desktop/releases/download/v$version/drawio-amd64-$version.deb"
 ) fi
 
 if _shouldinstall "obsidian" "Install Obsidian?"; then (
-    version=$(curl -s "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | jq -r '.name')
-    install_deb "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/obsidian_${version}_amd64.deb"
+    sudo snap install obsidian
+    # version=$(curl -s "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | jq -r '.name')
+    # _install_deb "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/obsidian_${version}_amd64.deb"
 ) fi
 
 if _shouldinstall "slack" "Install Slack?"; then (
-    version=$(sudo snap info slack | grep "latest/stable:" | cut -d" " -f7)
-    install_deb "https://downloads.slack-edge.com/releases/linux/$version/prod/x64/slack-desktop-$version-amd64.deb"
+    sudo snap install slack
+    # version=$(sudo snap info slack | grep "latest/stable:" | cut -d" " -f7)
+    # _install_deb "https://downloads.slack-edge.com/releases/linux/$version/prod/x64/slack-desktop-$version-amd64.deb"
 ) fi
 
 if _shouldinstall "chrome" "Install Google Chrome?"; then (
-    install_deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    _install_deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 ) fi
 
 if _shouldinstall "vscode" "Install VSCode?"; then (
-    install_deb "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
+    _install_deb "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
 ) fi
 
 if _shouldinstall "1password" "Install 1Password?"; then (
-    install_deb "https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb"
+    # Deb is preferred because with snap, some features are disabled.
+    # More info: https://support.1password.com/install-linux/#snap-store
+    # sudo snap install 1password
+    _install_deb "https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb"
 ) fi
 
 if _shouldinstall "emote" "Install Emote?"; then (
@@ -86,5 +104,5 @@ if _shouldinstall "emote" "Install Emote?"; then (
 ) fi
 
 if _shouldinstall "dconf-editor" "Install dconf-editor?"; then (
-    sudo apt install -y dconf-editor
+    sudo apt install -yq dconf-editor
 ) fi

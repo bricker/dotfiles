@@ -9,23 +9,21 @@ fi
 
 source "installers/_functions.bash"
 
-sudo apt update
-
 if _shouldinstall "ssh-key" "Generate SSH Key?"; then (set -e
     ssh-keygen -t ed25519 -a 100 -C "$(whoami)@$(hostname)"
     ssh-keygen -y -f ~/.ssh/id_ed25519
 ) fi
 
 if _shouldinstall "curl" "Install curl?"; then (
-    sudo apt install -y curl
+    sudo apt install -yq curl
 ) fi
 
 if _shouldinstall "git" "Install git?"; then (
-    sudo apt install -y git
+    sudo apt install -yq git
 ) fi
 
 if _shouldinstall "vim" "Install vim?"; then (
-    sudo apt install -y vim
+    sudo apt install -yq vim
     mkdir -p ~/.vim/pack/plugins/start
     # Add vim plugins here.
     # vim-fish is unmaintained so I don't install it by default.
@@ -35,46 +33,46 @@ if _shouldinstall "vimrc" "Install github:amix/vimrc? (Warning: Destructive!)"; 
     rm -rf ~/.vim_runtime
     # Removes some of the included plugins that I don't like
     git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
-    rm -rf ~/.vim_runtime/auto-pairs
+    rm -rf ~/.vim_runtime/sources_non_forked/auto-pairs
     ~/.vim_runtime/install_awesome_vimrc.sh
 
     _hardlink "$HOME/dotfiles/fs/home/bryan/.vim_runtime/my_configs.vim" "$HOME/.vim_runtime/"
 ) fi
 
 if _shouldinstall "tmux" "Install tmux?"; then (
-    sudo apt install -y tmux
+    sudo apt install -yq tmux
 ) fi
 
 if _shouldinstall "fish" "Install Fish Shell?"; then (set -eo pipefail
     echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_11/ /' | sudo tee /etc/apt/sources.list.d/shells:fish:release:3.list
     curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:3/Debian_11/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
-    sudo apt update
-    sudo apt install -y fish
+    sudo apt update -qq
+    sudo apt install -yq fish
     chsh --shell "$(which fish)"
 ) fi
 
 if _shouldinstall "homebrew" "Install Homebrew?"; then (
-    sudo apt install -y \
+    sudo apt install -yq \
         build-essential \
         gcc
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ) fi
 
 if _shouldinstall "flatpak" "Install flatpak?"; then (set -e
-    sudo apt install -y flatpak
+    sudo apt install -yq flatpak
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ) fi
 
 if _shouldinstall "xclip" "Install xclip?"; then (
-    sudo apt install -y xclip
+    sudo apt install -yq xclip
 ) fi
 
 if _shouldinstall "jq" "Install jq?"; then (
-    sudo apt install -y jq
+    sudo apt install -yq jq
 ) fi
 
 if _shouldinstall "gnome-tweaks" "Install gnome-tweaks?"; then (
-    sudo apt install -y gnome-tweaks
+    sudo apt install -yq gnome-tweaks
 ) fi
 
 # TODO:

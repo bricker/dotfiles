@@ -9,8 +9,6 @@ fi
 
 source "installers/_functions.bash"
 
-sudo apt update
-
 if _shouldinstall "ruby-install" "Install ruby-install?"; then (
     brew install ruby-install
 ) fi
@@ -21,7 +19,7 @@ if _shouldinstall "chruby" "Install chruby-fish?"; then (
 
 if _shouldinstall "pyenv" "Install pyenv?"; then (set -e
     # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
-    sudo apt install -y \
+    sudo apt install -yq \
         python3-tk \
         tk-dev \
         build-essential \
@@ -40,14 +38,22 @@ if _shouldinstall "pyenv" "Install pyenv?"; then (set -e
     brew install pyenv
 ) fi
 
-if _shouldinstall "nvm" "Install nvm.fish? (Warning: Destructive!)"; then (set -e
+if _shouldinstall "nvm-fish" "Install nvm.fish? (Warning: Destructive!)"; then (set -e
     _pdir="$HOME/.config/fish/plugins"
     _sdir="$_pdir/nvm.fish"
-    mkdir -p $_pdir 
+    mkdir -p "$_pdir"
     rm -rf "$_sdir"
     git clone --depth=1 https://github.com/jorgebucaran/nvm.fish "$_sdir"
-    L_install_fish_plugin "nvm.fish"
+    _install_fish_plugin "nvm.fish"
     fish --login --command "emit nvm_install" # FIXME: This is supposed to install $nvm_data but doesn't
+
+    nvm install latest
+    set -U nvm_default_version latest
+) fi
+
+if _shouldinstall "nvm-sh" "Install nvm-sh?"; then (set -eo pipefail
+    _latest_release=$(curl -s https://api.github.com/repos/nvm-sh/nvm/releases | jq -r ".[0].tag_name")
+    PROFILE=/dev/null bash -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${_latest_release}/install.sh | bash"
 ) fi
 
 if _shouldinstall "rust" "Install rust?"; then (set -eo pipefail

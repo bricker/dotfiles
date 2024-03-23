@@ -9,36 +9,38 @@ fi
 
 source "installers/_functions.bash"
 
-sudo apt update
-
-if _shouldinstall "libfuse2" "Install libfuse2? (to run AppImages from Desktop)"; then (
-    sudo apt install -y libfuse2
+if _shouldinstall "fuse" "Install libfuse2? (to run AppImages from Desktop)"; then (
+    sudo apt install -yq libfuse2
 ) fi
 
 if _shouldinstall "lm-sensors" "Install lm-sensors and run sensors-detect?"; then (
-    sudo apt install -y lm-sensors
+    sudo apt install -yq lm-sensors
     sudo sensors-detect
 ) fi
 
 if _shouldinstall "psensor" "Install psensor?"; then (
-    sudo apt install -y psensor
+    sudo apt install -yq psensor
 ) fi
 
 if _shouldinstall "bluez" "Install bluez?"; then (
-    sudo apt install -y bluez
+    sudo apt install -yq bluez
 ) fi
 
 if _shouldinstall "blueman" "Install blueman?"; then (
-    sudo apt install -y blueman
+    sudo apt install -yq blueman
+) fi
+
+if _shouldinstall "pavucontrol" "Install pavucontrol?"; then (
+    sudo apt install -yq pavucontrol
 ) fi
 
 if _shouldinstall "postgresql" "Install & setup postgresql?"; then (set -eo pipefail
     # https://wiki.postgresql.org/wiki/Apt
-    sudo apt install -y postgresql-common
+    sudo apt install -yq postgresql-common
     sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
-    sudo apt update
+    sudo apt update -qq
 
-    sudo apt install -y \
+    sudo apt install -yq \
         postgresql \
         postgresql-contrib \
         libpq-dev && \

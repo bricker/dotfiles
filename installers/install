@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+if test "$(whoami)" = "root"; then
+    echo "This program should not be run as root."
+    exit 1
+fi
+
+sudo apt update -qq
+
+./installers/essential "$@"
+./installers/langs "$@"
+./installers/clis "$@"
+./installers/apps "$@"
+./installers/gnome_extensions "$@"
+./installers/misc "$@"

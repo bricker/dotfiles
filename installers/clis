@@ -9,26 +9,24 @@ fi
 
 source "installers/_functions.bash"
 
-sudo apt update
-
 if _shouldinstall "terraform" "Install terraform?"; then (set -eo pipefail
     wget --quiet -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-    sudo apt update
-    sudo apt install -y terraform
+    sudo apt update -qq
+    sudo apt install -yq terraform
 ) fi
 
 if _shouldinstall "gh" "Install github CLI?"; then (set -eo pipefail
     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
     sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-    sudo apt update
-    sudo apt install -y gh
+    sudo apt update -qq
+    sudo apt install -yq gh
 ) fi
 
 
 if _shouldinstall "gcloud" "Install gcloud CLI?"; then (set -eo pipefail
-    sudo apt install -y \
+    sudo apt install -yq \
         apt-transport-https \
         ca-certificates \
         gnupg
@@ -36,13 +34,48 @@ if _shouldinstall "gcloud" "Install gcloud CLI?"; then (set -eo pipefail
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
 
-    sudo apt update
-    sudo apt install -y google-cloud-cli
+    sudo apt update -qq
+    sudo apt install -yq google-cloud-cli
 ) fi
 
 if _shouldinstall "ngrok" "Install ngrok?"; then (set -eo pipefail
     curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
     echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-    sudo apt update
-    sudo apt install -y ngrok
+    sudo apt update -qq
+    sudo apt install -yq ngrok
+) fi
+
+if _shouldinstall "kubectl" "Install kubectl?"; then (set -eo pipefail
+    # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+    # The binary option was chosen because the apt option requires the version to be manually updated.
+    # See https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/change-package-repository/ for details.
+
+    cd "$(mktemp -d)"
+
+    _version=$(curl -Ls https://dl.k8s.io/release/stable.txt)
+    echo "$_version"
+    _checksum=$(curl -Ls "https://dl.k8s.io/release/${_version}/bin/linux/amd64/kubectl.sha256")
+
+    curl -LO "https://dl.k8s.io/release/${_version}/bin/linux/amd64/kubectl"
+    echo "${_checksum}  kubectl" | sha256sum --check
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    kubectl version --client
+
+    # This is required for google cloud kubectl access
+    sudo apt install google-cloud-cli-gke-gcloud-auth-plugin
+) fi
+
+if _shouldinstall "helm" "Install Helm?"; then (set -eo pipefail
+    # https://helm.sh/docs/intro/install/
+    cd "$(mktemp -d)" # Not actually necessary
+    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    helm version
+) fi
+
+if _shouldinstall "minikube" "Install minikube?"; then (set -eo pipefail
+    # https://minikube.sigs.k8s.io/docs/start/
+    cd "$(mktemp -d)"
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ) fi
