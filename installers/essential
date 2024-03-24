@@ -75,9 +75,10 @@ if _shouldinstall "gnome-tweaks" "Install gnome-tweaks?"; then (
     sudo apt install -yq gnome-tweaks
 ) fi
 
-# TODO:
-# - apt default-jre
-# - apt maven
-# - swift
-# - imwheel
-# - xbindkeys?
+if _shouldinstall "dconf-editor" "Install dconf-editor?"; then (
+    sudo apt install -yq dconf-editor
+) fi
+
+if _shouldinstall "libfuse2" "Install libfuse2? (to run AppImages)"; then (
+    sudo apt install -yq libfuse2
+) fi

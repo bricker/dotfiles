@@ -102,7 +102,3 @@ if _shouldinstall "1password" "Install 1Password?"; then (
 if _shouldinstall "emote" "Install Emote?"; then (
     flatpak install com.tomjwatson.Emote
 ) fi
-
-if _shouldinstall "dconf-editor" "Install dconf-editor?"; then (
-    sudo apt install -yq dconf-editor
-) fi

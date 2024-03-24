@@ -9,10 +9,6 @@ fi
 
 source "installers/_functions.bash"
 
-if _shouldinstall "fuse" "Install libfuse2? (to run AppImages from Desktop)"; then (
-    sudo apt install -yq libfuse2
-) fi
-
 if _shouldinstall "lm-sensors" "Install lm-sensors and run sensors-detect?"; then (
     sudo apt install -yq lm-sensors
     sudo sensors-detect
