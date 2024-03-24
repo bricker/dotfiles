@@ -10,6 +10,8 @@ fi
 source "installers/_functions.bash"
 
 if _shouldinstall "docker" "Install Docker Desktop?"; then (set -eo pipefail
+    cd "$(mktemp -d)"
+
     # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
     # Add Docker's official GPG key
     sudo apt install -yq \
@@ -28,6 +30,10 @@ if _shouldinstall "docker" "Install Docker Desktop?"; then (set -eo pipefail
 
     # This is the latest docker version as of the time of writing this script. I couldn't find a way to download the latest version. The app will notify you of an update anyways.
     _install_deb "https://desktop.docker.com/linux/main/amd64/139021/docker-desktop-4.28.0-amd64.deb"
+
+    # TODO: Update ~/.docker/config.json to set secretservice for credential storage
+    curl -LO https://github.com/docker/docker-credential-helpers/releases/download/v0.8.1/docker-credential-secretservice-v0.8.1.linux-amd64
+    sudo install docker-credential-secretservice-v0.8.1.linux-amd64 /usr/local/bin/docker-credential-secretservice
 
     pass init "0BD24AC2020A221D"
 ) fi
