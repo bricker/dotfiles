@@ -68,10 +68,6 @@ if _shouldinstall "postman" "Install Postman?"; then (set -e
     sudo snap install postman
 ) fi
 
-if _shouldinstall "todoist" "Install Todoist?"; then (
-    sudo snap install todoist
-) fi
-
 if _shouldinstall "drawio" "Install drawio?"; then (
     sudo snap install drawio
     # version=$(curl -s "https://api.github.com/repos/jgraph/drawio-desktop/releases/latest" | jq -r '.name')
@@ -79,7 +75,7 @@ if _shouldinstall "drawio" "Install drawio?"; then (
 ) fi
 
 if _shouldinstall "obsidian" "Install Obsidian?"; then (
-    sudo snap install obsidian
+    sudo snap install obsidian --classic
     # version=$(curl -s "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | jq -r '.name')
     # _install_deb "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/obsidian_${version}_amd64.deb"
 ) fi

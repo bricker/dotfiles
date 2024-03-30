@@ -7,7 +7,7 @@ if _shouldinstall "gnome-extension-manager" "Install Gnome Extension Manager?"; 
     # flatpak install flathub org.gnome.Extensions
 ) fi
 
-if _shouldinstall "recommended-gnome-extension" "Install Recommended Gnome Extensions?"; then (
+if _shouldinstall "recommended-gnome-extensions" "Install Recommended Gnome Extensions?"; then (
     extensions=(
         "bluetooth-quick-connect@bjarosze.gmail.com"
         "just-perfection-desktop@just-perfection"

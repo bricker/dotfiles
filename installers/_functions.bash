@@ -7,7 +7,7 @@ function _ask() (set -u
 
 function _install_deb() (set -eu
     local url="$1"
-    outfile="$(mktemp).deb"
+    local outfile; outfile="$(mktemp).deb"
     wget --quiet -O "$outfile" "$url"
     sudo apt install -yq "$outfile"
 )
