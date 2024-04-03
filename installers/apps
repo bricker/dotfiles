@@ -51,13 +51,20 @@ if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -euo pipefail
     # https://docs.beekeeperstudio.io/installation/linux/
 
     ### AppImage - recommended
-    _latest_release=$(curl -sL https://api.github.com/repos/beekeeper-studio/beekeeper-studio/releases/latest)
-    _manifest_url=$(echo "$_latest_release" | jq -r ".assets[] | select(.name == \"latest-linux.yml\") | .browser_download_url")
-    _manifest=$(curl -sL "$_manifest_url")
-    _appimage_name=$(echo "$_manifest" | yq .path)
-    _appimage_url=$(echo "$_latest_release" | jq -r ".assets[] | select(.name == \"$_appimage_name\") | .browser_download_url")
+    _tag=$(curl -sL https://api.github.com/repos/beekeeper-studio/beekeeper-studio/releases/latest | jq -r ".tag_name")
+    _version=${_tag#"v"}
+    _appimage_url="https://github.com/beekeeper-studio/beekeeper-studio/releases/download/$_tag/Beekeeper-Studio-${_version}.AppImage"
 
     _download_and_install_appimage "$_appimage_url" "Beekeeper-Studio.AppImage"
+
+    # Alternative AppImage installation method:
+    # _latest_release=$(curl -sL https://api.github.com/repos/beekeeper-studio/beekeeper-studio/releases/latest)
+    # _manifest_url=$(echo "$_latest_release" | jq -r ".assets[] | select(.name == \"latest-linux.yml\") | .browser_download_url")
+    # _manifest=$(curl -sL "$_manifest_url")
+    # _appimage_name=$(echo "$_manifest" | yq .path)
+    # _appimage_url=$(echo "$_latest_release" | jq -r ".assets[] | select(.name == \"$_appimage_name\") | .browser_download_url")
+    # _download_and_install_appimage "$_appimage_url" "Beekeeper-Studio.AppImage"
+
 
     ### Snap
     # NOTE: Due to the Snap security model, the snap cannot connect to Postgres over a socket.
@@ -89,9 +96,17 @@ if _shouldinstall "drawio" "Install drawio?"; then (
 ) fi
 
 if _shouldinstall "obsidian" "Install Obsidian?"; then (
+    ### Snap
     sudo snap install obsidian --classic
-    # version=$(curl -s "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | jq -r '.name')
-    # _install_deb "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/obsidian_${version}_amd64.deb"
+
+    ### AppImage (recommended)
+    # _tag=$(curl -sL "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | jq -r ".tag_name")
+    # _version=${_tag#"v"}
+    # _appimage_url="https://github.com/obsidianmd/obsidian-releases/releases/download/${_tag}/Obsidian-${_version}.AppImage"
+    # _download_and_install_appimage "$_appimage_url" "Obsidian.AppImage"
+
+    ### deb
+    # _install_deb "https://github.com/obsidianmd/obsidian-releases/releases/download/${_tag}/obsidian_${_version}_amd64.deb"
 ) fi
 
 if _shouldinstall "slack" "Install Slack?"; then (
