@@ -38,13 +38,6 @@ if _shouldinstall "gcloud" "Install gcloud CLI?"; then (set -eo pipefail
     sudo apt install -yq google-cloud-cli
 ) fi
 
-if _shouldinstall "ngrok" "Install ngrok?"; then (set -eo pipefail
-    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
-    echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-    sudo apt update -qq
-    sudo apt install -yq ngrok
-) fi
-
 if _shouldinstall "kubectl" "Install kubectl?"; then (set -eo pipefail
     # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 

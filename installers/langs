@@ -11,6 +11,7 @@ source "installers/_functions.bash"
 
 if _shouldinstall "ruby-install" "Install ruby-install?"; then (
     brew install ruby-install
+    ruby-install ruby # latest
 ) fi
 
 if _shouldinstall "chruby" "Install chruby-fish?"; then (
@@ -36,6 +37,7 @@ if _shouldinstall "pyenv" "Install pyenv?"; then (set -e
         liblzma-dev
 
     brew install pyenv
+    pyenv install 3 # latest
 ) fi
 
 if _shouldinstall "nvm-fish" "Install nvm.fish? (Warning: Destructive!)"; then (set -e
