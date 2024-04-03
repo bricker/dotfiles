@@ -47,15 +47,29 @@ if _shouldinstall "pgadmin" "Install pgadmin?"; then (set -eo pipefail
     sudo apt install -yq pgadmin4-desktop
 ) fi
 
-if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -eo pipefail
+if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -euo pipefail
+    # https://docs.beekeeperstudio.io/installation/linux/
+
+    ### AppImage - recommended
+    _latest_release=$(curl -sL https://api.github.com/repos/beekeeper-studio/beekeeper-studio/releases/latest)
+    _manifest_url=$(echo "$_latest_release" | jq -r ".assets[] | select(.name == \"latest-linux.yml\") | .browser_download_url")
+    _manifest=$(curl -sL "$_manifest_url")
+    _appimage_name=$(echo "$_manifest" | yq .path)
+    _appimage_url=$(echo "$_latest_release" | jq -r ".assets[] | select(.name == \"$_appimage_name\") | .browser_download_url")
+
+    _download_and_install_appimage "$_appimage_url" "Beekeeper-Studio.AppImage"
+
+    ### Snap
+    # NOTE: Due to the Snap security model, the snap cannot connect to Postgres over a socket.
+    # Therefore, the snap is not recommended.
     # https://snapcraft.io/beekeeper-studio
     # Publisher: https://snapcraft.io/publisher/matthew-rathbone
     # The publisher "matthew-rathbone" is the co-creator of Beekeeper and active contributor to the project.
-    sudo snap install beekeeper-studio
+    # sudo snap install beekeeper-studio
 
+    ### deb
     # wget --quiet -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
     # echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
-
     # sudo apt update -qq
     # sudo apt install -yq beekeeper-studio
 ) fi
@@ -68,9 +82,9 @@ if _shouldinstall "postman" "Install Postman?"; then (set -e
     sudo snap install postman
 ) fi
 
-if _shouldinstall "todoist" "Install Todoist?"; then (
-    sudo snap install todoist
-) fi
+# if _shouldinstall "todoist" "Install Todoist?"; then (
+#     sudo snap install todoist
+# ) fi
 
 if _shouldinstall "drawio" "Install drawio?"; then (
     sudo snap install drawio

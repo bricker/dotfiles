@@ -71,6 +71,10 @@ if _shouldinstall "jq" "Install jq?"; then (
     sudo apt install -yq jq
 ) fi
 
+if _shouldinstall "yq" "Install yq?"; then (
+    brew install yq
+) fi
+
 if _shouldinstall "gnome-tweaks" "Install gnome-tweaks?"; then (
     sudo apt install -yq gnome-tweaks
 ) fi

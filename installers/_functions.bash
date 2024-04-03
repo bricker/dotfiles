@@ -13,11 +13,15 @@ function _install_deb() (set -eu
 )
 
 function _hardlink() (set -eu
-    cp -alviu "$1" "$2"
+    local src="$1"
+    local dest="$2"
+    cp -alviu "$src" "$dest"
 )
 
 function _cp_sudo() (set -eu
-    sudo cp -aviu "$1" "$2"
+    local src="$1"
+    local dest="$2"
+    sudo cp -aviu "$src" "$dest"
 )
 
 function _install_fish_plugin() (set -eu
@@ -42,6 +46,25 @@ function _install_fish_plugin() (set -eu
     if test -d "$plugin_path/vendor_completions.d"; then    sudo cp "$plugin_path"/vendor_completions.d/* $dest_path/vendor_completions.d; fi
     if test -d "$plugin_path/vendor_functions.d"; then      sudo cp "$plugin_path"/vendor_functions.d/*   $dest_path/vendor_functions.d; fi
     if test -d "$plugin_path/vendor_conf.d"; then           sudo cp "$plugin_path"/vendor_conf.d/*        $dest_path/vendor_conf.d; fi
+)
+
+function _download_and_install_appimage () (set -eu
+    local appimage_url="$1"
+    local appimage_filename="$2"
+
+    cd "$(mktemp -d)"
+
+    curl -sL -o "$appimage_filename" "$appimage_url"
+    chmod +x "$appimage_filename"
+    "./$appimage_filename" --appimage-extract > /dev/null
+    cp -R ./squashfs-root/usr/share/icons/. "$HOME/.local/share/icons"
+
+    sed -i "s/^Exec=AppRun.*$/Exec=\/home\/bryan\/appimages\/$appimage_filename/" squashfs-root/*.desktop
+    cp ./squashfs-root/*.desktop "$HOME/.local/share/applications"
+
+    mv "$appimage_filename" "$HOME/appimages"
+
+    echo "Installed $appimage_filename"
 )
 
 _TARGETPKG="${1:-}"

@@ -50,7 +50,3 @@ if _shouldinstall "postgresql" "Install & setup postgresql?"; then (set -eo pipe
     sudo -u postgres createuser -s "$me"
     createdb # creates database for current user
 ) fi
-
-if _shouldinstall "yq" "Install yq?"; then (
-    brew install yq
-) fi
