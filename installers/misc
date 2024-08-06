@@ -30,6 +30,10 @@ if _shouldinstall "pavucontrol" "Install pavucontrol?"; then (
     sudo apt install -yq pavucontrol
 ) fi
 
+if _shouldinstall "libnss3-tools" "Install libnss3-tools (eg certutil)?"; then (
+    sudo apt install -yq libnss3-tools
+) fi
+
 if _shouldinstall "postgresql" "Install & setup postgresql?"; then (set -eo pipefail
     # https://wiki.postgresql.org/wiki/Apt
     sudo apt install -yq postgresql-common

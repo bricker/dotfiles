@@ -51,11 +51,10 @@ if _shouldinstall "pgadmin" "Install pgadmin?"; then (set -eo pipefail
 if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -euo pipefail
     # https://docs.beekeeperstudio.io/installation/linux/
 
-    ### AppImage - recommended
+    ### AppImage
     _tag=$(curl -sL https://api.github.com/repos/beekeeper-studio/beekeeper-studio/releases/latest | jq -r ".tag_name")
     _version=${_tag#"v"}
     _appimage_url="https://github.com/beekeeper-studio/beekeeper-studio/releases/download/$_tag/Beekeeper-Studio-${_version}.AppImage"
-
     _download_and_install_appimage "$_appimage_url" "Beekeeper-Studio.AppImage"
 
     # Alternative AppImage installation method:
@@ -76,8 +75,11 @@ if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -euo pipefail
     # sudo snap install beekeeper-studio
 
     ### deb
-    # wget --quiet -O - https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor -o /usr/share/keyrings/beekeeper-studio-app.gpg
-    # echo "deb [signed-by=/usr/share/keyrings/beekeeper-studio-app.gpg] https://deb.beekeeperstudio.io stable main" | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list
+    # curl -fsSL https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor --output /usr/share/keyrings/beekeeper.gpg \
+    #     && sudo chmod go+r /usr/share/keyrings/beekeeper.gpg \
+    #     && echo "deb [signed-by=/usr/share/keyrings/beekeeper.gpg] https://deb.beekeeperstudio.io stable main" \
+    #         | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list > /dev/null
+
     # sudo apt update -qq
     # sudo apt install -yq beekeeper-studio
 ) fi
