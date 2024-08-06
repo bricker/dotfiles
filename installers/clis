@@ -13,7 +13,7 @@ if _shouldinstall "terraform" "Install terraform?"; then (set -eo pipefail
     wget --quiet -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
     sudo apt update -qq
-    sudo apt install -yq terraform
+    sudo apt install -q terraform
 ) fi
 
 if _shouldinstall "gh" "Install github CLI?"; then (set -eo pipefail
@@ -21,12 +21,12 @@ if _shouldinstall "gh" "Install github CLI?"; then (set -eo pipefail
     sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
     sudo apt update -qq
-    sudo apt install -yq gh
+    sudo apt install -q gh
 ) fi
 
 
 if _shouldinstall "gcloud" "Install gcloud CLI?"; then (set -eo pipefail
-    sudo apt install -yq \
+    sudo apt install -q \
         apt-transport-https \
         ca-certificates \
         gnupg
@@ -35,7 +35,7 @@ if _shouldinstall "gcloud" "Install gcloud CLI?"; then (set -eo pipefail
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
 
     sudo apt update -qq
-    sudo apt install -yq google-cloud-cli
+    sudo apt install -q google-cloud-cli
 ) fi
 
 if _shouldinstall "kubectl" "Install kubectl?"; then (set -eo pipefail
@@ -56,7 +56,7 @@ if _shouldinstall "kubectl" "Install kubectl?"; then (set -eo pipefail
     kubectl version --client
 
     # This is required for google cloud kubectl access
-    sudo apt install google-cloud-cli-gke-gcloud-auth-plugin
+    sudo apt install -q google-cloud-cli-gke-gcloud-auth-plugin
 ) fi
 
 if _shouldinstall "helm" "Install Helm?"; then (set -eo pipefail
@@ -71,4 +71,18 @@ if _shouldinstall "minikube" "Install minikube?"; then (set -eo pipefail
     cd "$(mktemp -d)"
     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     sudo install minikube-linux-amd64 /usr/local/bin/minikube
+) fi
+
+if _shouldinstall "1password-cli" "Install One Password CLI?"; then (set -eo pipefail
+    # https://developer.1password.com/docs/cli/get-started/
+    curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | sudo tee /etc/apt/sources.list.d/1password.list
+
+    sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+    curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+
+    sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+    curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+
+    sudo apt update && sudo apt install -q 1password-cli
 ) fi

@@ -26,7 +26,6 @@ main() (
 
             case "$dist" in
                 "Ubuntu")
-                    deploy etc
                     deploy-home
                     ;;
                 "Raspbian")
