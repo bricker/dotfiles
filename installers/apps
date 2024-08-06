@@ -30,7 +30,7 @@ if _shouldinstall "docker" "Install Docker Desktop?"; then (set -eo pipefail
 
     # This is the latest docker version as of the time of writing this script. I couldn't find a way to download the latest version. The app will notify you of an update anyways.
     # TODO: Download the latest release instead of hardcoded version number
-    _install_deb "https://desktop.docker.com/linux/main/amd64/145265/docker-desktop-4.29.0-amd64.deb"
+    _install_deb "https://desktop.docker.com/linux/main/amd64/157355/docker-desktop-amd64.deb"
 
     # TODO: Update ~/.docker/config.json to set secretservice for credential storage
     # curl -LO https://github.com/docker/docker-credential-helpers/releases/download/v0.8.1/docker-credential-secretservice-v0.8.1.linux-amd64
