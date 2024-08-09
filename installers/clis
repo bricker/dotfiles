@@ -73,7 +73,7 @@ if _shouldinstall "minikube" "Install minikube?"; then (set -eo pipefail
     sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ) fi
 
-if _shouldinstall "1password-cli" "Install One Password CLI?"; then (set -eo pipefail
+if _shouldinstall "1password-cli" "Install 1Password CLI?"; then (set -eo pipefail
     # https://developer.1password.com/docs/cli/get-started/
     curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | sudo tee /etc/apt/sources.list.d/1password.list
