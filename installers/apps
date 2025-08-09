@@ -82,6 +82,11 @@ if _shouldinstall "beekeeper" "Install Beekeeper?"; then (set -euo pipefail
     # sudo apt install -yq beekeeper-studio
 ) fi
 
+if _shouldinstall "cursor" "Install Cursor?"; then (set -euo pipefail
+    _appimage_url=$(curl -sL "https://cursor.com/api/download?platform=linux-x64&releaseTrack=stable" | jq -r ".downloadUrl")
+    _download_and_install_appimage "$_appimage_url" "Cursor.AppImage"
+) fi
+
 if _shouldinstall "insomnia" "Install Insomnia?"; then (set -e
     _install_deb "https://updates.insomnia.rest/downloads/ubuntu/latest?app=com.insomnia.app"
 ) fi
