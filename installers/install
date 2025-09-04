@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 if test "$(whoami)" = "root"; then
     echo "This program should not be run as root."
