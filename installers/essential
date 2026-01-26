@@ -52,7 +52,7 @@ if _shouldinstall "fish" "Install Fish Shell?"; then (set -eo pipefail
     # sudo apt update -qq
     # sudo apt install -yq fish
 
-    chsh --shell /usr/bin/fish
+    chsh --shell "$(which fish)"
 ) fi
 
 if _shouldinstall "homebrew" "Install Homebrew?"; then (
