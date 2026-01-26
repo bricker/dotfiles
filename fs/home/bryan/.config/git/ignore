@@ -1,4 +1,4 @@
-.bcr/
+.bcr
 *.rdb
 xcuserdata
 *.swp
@@ -8,3 +8,5 @@ xcuserdata
 .env
 __pycache__
 .mypy_cache
+
+**/.claude/settings.local.json
